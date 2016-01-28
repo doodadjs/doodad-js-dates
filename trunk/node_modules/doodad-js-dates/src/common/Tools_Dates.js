@@ -1,5 +1,5 @@
-//! REPLACE_BY("// Copyright 2015 Claude Petit, licensed under Apache License version 2.0\n")
-// dOOdad - Object-oriented programming framework with some extras
+//! REPLACE_BY("// Copyright 2016 Claude Petit, licensed under Apache License version 2.0\n")
+// dOOdad - Object-oriented programming framework
 // File: Tools_Dates.js - Useful date/time tools
 // Project home: https://sourceforge.net/projects/doodad-js/
 // Trunk: svn checkout svn://svn.code.sf.net/p/doodad-js/code/trunk doodad-js-code
@@ -8,7 +8,7 @@
 // Note: I'm still in alpha-beta stage, so expect to find some bugs or incomplete parts !
 // License: Apache V2
 //
-//	Copyright 2015 Claude Petit
+//	Copyright 2016 Claude Petit
 //
 //	Licensed under the Apache License, Version 2.0 (the "License");
 //	you may not use this file except in compliance with the License.
@@ -27,7 +27,7 @@
 	var global = this;
 
 	var exports = {};
-	if (global.process) {
+	if (typeof process === 'object') {
 		module.exports = exports;
 	};
 	
@@ -35,9 +35,15 @@
 		DD_MODULES = (DD_MODULES || {});
 		DD_MODULES['Doodad.Tools.Dates'] = {
 			type: null,
-			version: '1r',
+			version: '1.1r',
 			namespaces: null,
-			dependencies: ['Doodad.Tools', 'Doodad.Tools.Locale'],
+			dependencies: [
+				'Doodad.Tools', 
+				{
+					name: 'Doodad.Tools.Locale',
+					version: '1.2',
+				},
+			],
 			
 			create: function create(root, /*optional*/_options) {
 				"use strict";
@@ -105,9 +111,9 @@
 				dates.strftime = function strftime(format, obj, /*optional*/loc, /*optional*/utc) {
 					var current;
 					if (loc) {
-						current = loc.categories[locale.LC_TIME];
+						current = loc[locale.LC_TIME];
 					} else {
-						current = locale.getCurrent().categories[locale.LC_TIME]
+						current = locale.getCurrent()[locale.LC_TIME]
 					};
 					
 					var negative_number;
@@ -806,8 +812,8 @@
 		return DD_MODULES;
 	};
 	
-	if (!global.process) {
+	if (typeof process !== 'object') {
 		// <PRB> export/import are not yet supported in browsers
 		global.DD_MODULES = exports.add(global.DD_MODULES);
 	};
-})();
+}).call((typeof global !== 'undefined') ? global : ((typeof window !== 'undefined') ? window : this));
