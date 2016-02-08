@@ -96,10 +96,16 @@
 
 				//var tzset_called = false;
 				
+				
+				var __Natives__ = {
+					mathFloor: global.Math.floor,
+				};
+				
+				
 				var ISO_WEEK_START_WDAY = 1,
 					ISO_WEEK1_WDAY = 4, /* Thursday */
 					YDAY_MINIMUM = -366,
-					big_enough_multiple_of_7 = (Math.floor(-YDAY_MINIMUM / 7) + 2) * 7;
+					big_enough_multiple_of_7 = (__Natives__.mathFloor(-YDAY_MINIMUM / 7) + 2) * 7;
 					
 				dates.isoWeekDays = function isoWeekDays(yday, wday) {
 					/* Add enough to the first operand of % to make it nonnegative.  */
@@ -134,7 +140,7 @@
 						if (negative_number) {
 							zone = -zone;
 						};
-						zone = 'UTC' + (negative_number ? '-' : '+') + ('0' + Math.floor(zone / 60)).slice(-2) + ':' + ('0' + (zone % 60)).slice(-2);
+						zone = 'UTC' + (negative_number ? '-' : '+') + ('0' + __Natives__.mathFloor(zone / 60)).slice(-2) + ':' + ('0' + (zone % 60)).slice(-2);
 					};
 
 					var hour12 = (utc ? obj.getUTCHours() : obj.getHours());
@@ -424,7 +430,7 @@
 								};
 
 								var year = (utc ? obj.getUTCFullYear() : obj.getFullYear());
-								retval += DO_NUMBER (1, Math.floor(year / 100) - (year % 100 < 0));
+								retval += DO_NUMBER (1, __Natives__.mathFloor(year / 100) - (year % 100 < 0));
 								break;
 
 							case 'x':
@@ -646,7 +652,7 @@
 									break;
 								};
 
-								retval += DO_NUMBER (2, Math.floor((dates.getDayOfYear(obj, utc) - (utc ? obj.getUTCDay() : obj.getDay()) + 7) / 7));
+								retval += DO_NUMBER (2, __Natives__.mathFloor((dates.getDayOfYear(obj, utc) - (utc ? obj.getUTCDay() : obj.getDay()) + 7) / 7));
 								break;
 
 							case 'V':
@@ -683,7 +689,7 @@
 										break;
 
 									default:
-										retval += DO_NUMBER (2, Math.floor(days / 7) + 1);
+										retval += DO_NUMBER (2, __Natives__.mathFloor(days / 7) + 1);
 										break;
 								};
 								break;
@@ -694,7 +700,7 @@
 									break;
 								};
 
-								retval += DO_NUMBER (2, Math.floor(((dates.getDayOfYear(obj, utc) - ((utc ? obj.getUTCDay() : obj.getDay()) - 1 + 7) % 7 + 7) / 7) + 0.5));
+								retval += DO_NUMBER (2, __Natives__.mathFloor(((dates.getDayOfYear(obj, utc) - ((utc ? obj.getUTCDay() : obj.getDay()) - 1 + 7) % 7 + 7) / 7) + 0.5));
 								break;
 				
 							case 'w': // Week day number
@@ -777,7 +783,7 @@
 								};
 
 								//diff /= 60;
-								retval += DO_NUMBER (4, Math.floor(diff / 60 * 100) + (diff % 60));
+								retval += DO_NUMBER (4, __Natives__.mathFloor(diff / 60 * 100) + (diff % 60));
 								break;
 
 	/*

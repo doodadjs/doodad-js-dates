@@ -1,6 +1,6 @@
 {
   "name": "doodad-js-dates",
-  "version": "1.1.3",
+  "version": "1.1.4",
   "description": "\"doodad-js\" Dates",
   "homepage": "https://sourceforge.net/projects/doodad-js/",
   "main": "index.js",
@@ -21,7 +21,8 @@
   },
   "keywords": [
     "doodad-js",
-    "dates"
+    "dates",
+	"strftime"
   ],
   "author": "Claude Petit <doodadjs@gmail.com> (https://sourceforge.net/projects/doodad-js/)",
   "license": "Apache-2.0",
@@ -37,7 +38,7 @@
     "email" : "doodadjs@gmail.com"
   },
   "dependencies": {
-    "doodad-js": "^1.1.0",
+    "doodad-js": "^1.2.0",
     "doodad-js-locale": "^1.2.0"
   },
   "devDependencies": {
