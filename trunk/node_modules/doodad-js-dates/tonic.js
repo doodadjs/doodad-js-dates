@@ -6,12 +6,12 @@ const modules = {};
 require('doodad-js-locale').add(modules);
 require('doodad-js-dates').add(modules);
 
-root.Doodad.Namespaces.loadNamespaces( function callback() {
-	
+function startup() {
 	const dates = root.Doodad.Tools.Dates;
 	console.log( dates.strftime("%c", new Date()) );
-	
-}, /*donThrow*/ false, /*options*/ null, modules )
+};
+
+root.Doodad.Namespaces.loadNamespaces( /*callback*/ startup, /*donThrow*/ false, /*options*/ null, modules )
 	['catch'](function(err) {
 		console.error(err);
 	});
