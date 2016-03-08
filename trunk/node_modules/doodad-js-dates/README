@@ -21,6 +21,7 @@ $ npm install doodad-js-dates
     const root = require('doodad-js').createRoot( null, { node_env: 'development' } );
 
     const modules = {};
+    require('doodad-js-unicode').add(modules);
     require('doodad-js-locale').add(modules);
     require('doodad-js-dates').add(modules);
 
@@ -29,7 +30,7 @@ $ npm install doodad-js-dates
         console.log( dates.strftime("%c", new Date()) );
     };
 
-    root.Doodad.Namespaces.loadNamespaces( startup, false, null, modules )
+    root.Doodad.Namespaces.loadNamespaces(modules, startup)
         ['catch'](function(err) {
             console.error(err);
         });
