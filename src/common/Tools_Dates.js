@@ -35,13 +35,13 @@
 		DD_MODULES = (DD_MODULES || {});
 		DD_MODULES['Doodad.Tools.Dates'] = {
 			type: null,
-			version: '1.1r',
+			version: '1.2.0r',
 			namespaces: null,
 			dependencies: [
 				'Doodad.Tools', 
 				{
 					name: 'Doodad.Tools.Locale',
-					version: '1.2',
+					version: '1.3.0',
 				},
 			],
 			

@@ -28,9 +28,9 @@ module.exports = {
 		DD_MODULES = (DD_MODULES || {});
 		DD_MODULES['doodad-js-dates'] = {
 			type: null,
-			version: '0a',
+			version: '1.2.0r',
 			namespaces: null,
-			dependencies: [],
+			dependencies: null,
 			exports: module.exports,
 			
 			create: function create(root, /*optional*/_options) {
@@ -40,19 +40,11 @@ module.exports = {
 				} catch(ex) {
 				};
 				
-				var fromSource = root.getOptions().settings.fromSource,
-					modules = {};
+				var modules = {};
 				
-				if (fromSource) {
-					require("./dist/doodad-js-dates/Tools_Dates.js").add(modules);
-				} else {
-					// TODO: Find a way to prevent browserify to bundle both versions.
-					//require("./dist/doodad-js-dates/Tools_Dates.min.js").add(modules);
-					
-					require("./dist/doodad-js-dates/Tools_Dates.js").add(modules);
-				};
+				require("./dist/doodad-js-dates/Tools_Dates.js").add(modules);
 				
-				return root.Doodad.Namespaces.loadNamespaces(null, false, config, modules);
+				return root.Doodad.Namespaces.loadNamespaces(modules, null, config, false);
 			},
 		};
 		return DD_MODULES;
