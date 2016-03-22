@@ -35,13 +35,13 @@
 		DD_MODULES = (DD_MODULES || {});
 		DD_MODULES['Doodad.Tools.Dates'] = {
 			type: null,
-			version: '1.2.0r',
+			version: '1.3.0r',
 			namespaces: null,
 			dependencies: [
 				'Doodad.Tools', 
 				{
 					name: 'Doodad.Tools.Locale',
-					version: '1.3.0',
+					version: '2.0.0',
 				},
 			],
 			
@@ -117,9 +117,9 @@
 				dates.strftime = function strftime(format, obj, /*optional*/loc, /*optional*/utc) {
 					var current;
 					if (loc) {
-						current = loc[locale.LC_TIME];
+						current = loc.LC_TIME;
 					} else {
-						current = locale.getCurrent()[locale.LC_TIME]
+						current = locale.getCurrent().LC_TIME
 					};
 					
 					var negative_number;
