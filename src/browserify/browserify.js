@@ -27,11 +27,18 @@ module.exports = {
 	add: function add(DD_MODULES) {
 		DD_MODULES = (DD_MODULES || {});
 		DD_MODULES['doodad-js-dates'] = {
-			type: null,
-			version: '1.3.0r',
-			namespaces: null,
-			dependencies: null,
-			exports: module.exports,
+			type: 'Package',
+			//! INSERT("version:'" + VERSION('doodad-js-dates') + "',")
+			dependencies: [
+				{
+					name: 'doodad-js',
+					//! INSERT("version:'" + VERSION('doodad-js') + "',")
+				},
+				{
+					name: 'doodad-js-locale',
+					//! INSERT("version:'" + VERSION('doodad-js-locale') + "',")
+				},
+			],
 			
 			create: function create(root, /*optional*/_options) {
 				var config = null;
@@ -44,7 +51,10 @@ module.exports = {
 				
 				require("./dist/doodad-js-dates/Tools_Dates.min.js").add(modules);
 				
-				return root.Doodad.Namespaces.loadNamespaces(modules, null, config, false);
+				return root.Doodad.Namespaces.loadNamespaces(modules, null, config, false)
+					.then(function() {
+						// Returns nothing
+					});
 			},
 		};
 		return DD_MODULES;

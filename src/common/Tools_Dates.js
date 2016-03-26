@@ -35,15 +35,9 @@
 		DD_MODULES = (DD_MODULES || {});
 		DD_MODULES['Doodad.Tools.Dates'] = {
 			type: null,
-			version: '1.3.0r',
+			//! INSERT("version:'" + VERSION('doodad-js-dates') + "',")
 			namespaces: null,
-			dependencies: [
-				'Doodad.Tools', 
-				{
-					name: 'Doodad.Tools.Locale',
-					version: '2.0.0',
-				},
-			],
+			dependencies: null,
 			
 			create: function create(root, /*optional*/_options) {
 				"use strict";

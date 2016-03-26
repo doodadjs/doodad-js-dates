@@ -1,6 +1,7 @@
 {
   "name": "doodad-js-dates",
-  "version": "1.3.0",
+  "version": "1.4.0",
+  "stage": "r",
   "description": "Date formatting with locale support",
   "homepage": "https://sourceforge.net/projects/doodad-js/",
   "main": "index.js",
