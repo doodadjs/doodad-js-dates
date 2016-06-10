@@ -47,6 +47,7 @@
 				"use strict";
 
 				var doodad = root.Doodad,
+					types = doodad.Types,
 					tools = doodad.Tools,
 					locale = tools.Locale,
 					dates = tools.Dates;
@@ -195,7 +196,7 @@
 							number_value = -number_value;
 						};
 					  
-						return do_number_sign_and_padding(number_value + '', digits);
+						return do_number_sign_and_padding(types.toString(number_value), digits);
 					};
 					
 					function DO_NUMBER_SPACEPAD(digits, number_value) {
@@ -316,7 +317,7 @@
 							width += chr;
 							p++;
 						};
-						width = parseInt(width) || 0;
+						width = types.toInteger(width) || 0;
 
 						/* Check for modifiers.  */
 						if (p >= formatLen) {
