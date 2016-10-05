@@ -1,8 +1,8 @@
 {
   "name": "doodad-js-dates",
-  "version": "1.6.0",
+  "version": "2.0.0",
   "stage": "r",
-  "description": "Date formatting with locale support",
+  "description": "Date formatting with locale support, and helper for 'moment'.",
   "files": [
 	"tonic.js"
   ],
@@ -11,5 +11,17 @@
     "dates",
 	"strftime"
   ],
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/doodadjs/doodad-js-dates.git"
+  },
+  "bugs": {
+    "url": "https://github.com/doodadjs/doodad-js-dates/issues",
+    "email": "doodadjs@gmail.com"
+  },
+  "optionalDependencies": {
+    "moment": "^2.15.1",
+	"moment-timezone": "^0.5.5"
+  },
   "tonicExampleFilename": "tonic.js"
 }

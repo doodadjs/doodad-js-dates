@@ -12,6 +12,7 @@ function startup() {
 	console.log( dates.strftime("%c", new Date()) );
 };
 
-root.Doodad.Namespaces.load(modules, startup)['catch'](function(err) {
+root.Doodad.Namespaces.load(modules, startup)
+	['catch'](function(err) {
 		console.error(err);
 	});
