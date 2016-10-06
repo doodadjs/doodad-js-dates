@@ -59,7 +59,7 @@ module.exports = {
 						dataUri: null,
 					}, _options);
 
-					//__options__. = types.to...(__options__.);
+					__options__.dataUri = __options__.dataUri && files.Url.parse(__options__.dataUri);
 
 					types.freezeObject(__options__);
 
