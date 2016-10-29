@@ -68,7 +68,7 @@ module.exports = {
 					};
 
 
-					__Internal__.loadLocale = function loadLocale(name) {
+					__Internal__.loadLocale = function loadLocale(name, /*optional*/globally) {
 						var ddName = locale.momentToDoodadName(name);
 						name = locale.doodadToMomentName(ddName);
 						if (!__Internal__.loaded[name]) {
@@ -88,21 +88,24 @@ module.exports = {
 							};
 							__Internal__.loaded[name] = true;
 						};
+						if (globally) {
+							locale.setCurrent(ddName);
+						};
 						return name;
 					};
 
 					global.moment.lang = global.moment.locale = moment.lang = moment.locale = function locale(name) {
 						if (name) {
-							name = __Internal__.loadLocale(name);
-							return __Internal__.oldLocaleFn(name);
+							name = __Internal__.loadLocale(name, true);
+							return __Internal__.oldLocaleFn.call(this, name);
 						} else {
-							return __Internal__.oldLocaleFn();
+							return __Internal__.oldLocaleFn.call(this);
 						};
 					};
 
 					global.moment.prototype.lang = global.moment.prototype.locale = function locale(name) {
 						if (name) {
-							name = __Internal__.loadLocale(name);
+							name = __Internal__.loadLocale(name, false);
 							return __Internal__.oldPrototypeLocaleFn.call(this, name);
 						} else {
 							return __Internal__.oldPrototypeLocaleFn.call(this);

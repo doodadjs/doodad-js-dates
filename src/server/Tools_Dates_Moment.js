@@ -78,7 +78,7 @@ module.exports = {
 					};
 
 
-					__Internal__.loadLocale = function loadLocale(name) {
+					__Internal__.loadLocale = function loadLocale(name, /*optional*/globally) {
 						const ddName = locale.momentToDoodadName(name);
 						name = locale.doodadToMomentName(ddName);
 						if (!__Internal__.loaded[name]) {
@@ -98,21 +98,24 @@ module.exports = {
 							};
 							__Internal__.loaded[name] = true;
 						};
+						if (globally) {
+							locale.setCurrent(ddName);
+						};
 						return name;
 					};
 
 					nodejsMoment.lang = nodejsMoment.locale = moment.lang = moment.locale = function locale(/*optional*/name) {
 						if (name) {
-							name = __Internal__.loadLocale(name);
-							return __Internal__.oldLocaleFn(name);
+							name = __Internal__.loadLocale(name, true);
+							return __Internal__.oldLocaleFn.call(this, name);
 						} else {
-							return __Internal__.oldLocaleFn();
+							return __Internal__.oldLocaleFn.call(this);
 						};
 					};
 
 					nodejsMoment.prototype.lang = nodejsMoment.prototype.locale = function locale(/*optional*/name) {
 						if (name) {
-							name = __Internal__.loadLocale(name);
+							name = __Internal__.loadLocale(name, false);
 							return __Internal__.oldPrototypeLocaleFn.call(this, name);
 						} else {
 							return __Internal__.oldPrototypeLocaleFn.call(this);
