@@ -1,18 +1,15 @@
 "use strict";
 
-const root = require('doodad-js').createRoot();
-
 const modules = {};
 require('doodad-js-unicode').add(modules);
 require('doodad-js-locale').add(modules);
 require('doodad-js-dates').add(modules);
 
-function startup() {
-	const dates = root.Doodad.Tools.Dates;
-	console.log( dates.strftime("%c", new Date()) );
-};
-
-root.Doodad.Namespaces.load(modules, startup)
-	['catch'](function(err) {
+require('doodad-js').createRoot(modules)
+	.then(root => {
+		const dates = root.Doodad.Tools.Dates;
+		console.log( dates.strftime("%c", new Date()) );
+	})
+	.catch(err => {
 		console.error(err);
 	});
