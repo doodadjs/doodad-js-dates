@@ -45,7 +45,7 @@ module.exports = {
 				version: /*! REPLACE_BY(TO_SOURCE(VERSION(MANIFEST("name")))) */ null /*! END_REPLACE()*/,
 				proto: function(root) {
 					const types = root.Doodad.Types;
-					return types.nullObject(nodejsMoment, {locale: types.WRITABLE(nodejsMoment.locale), lang: types.WRITABLE(nodejsMoment.lang), tz: types.WRITABLE(nodejsMoment.tz)});
+					return types.nullObject(nodejsMoment, {locale: types.CONFIGURABLE(nodejsMoment.locale), lang: types.CONFIGURABLE(nodejsMoment.lang), tz: types.CONFIGURABLE(nodejsMoment.tz)});
 				},
 				create: function create(root, /*optional*/_options, _shared) {
 					"use strict";
@@ -73,9 +73,9 @@ module.exports = {
 
 					types.freezeObject(__options__);
 
-					moment.getOptions = function() {
+					moment.ADD('getOptions', function() {
 						return __options__;
-					};
+					});
 
 
 					__Internal__.loadLocale = function loadLocale(name, /*optional*/globally) {
@@ -104,14 +104,14 @@ module.exports = {
 						return name;
 					};
 
-					nodejsMoment.lang = nodejsMoment.locale = moment.lang = moment.locale = function locale(/*optional*/name) {
+					nodejsMoment.lang = nodejsMoment.locale = moment.ADD('lang', moment.ADD('locale', function locale(/*optional*/name) {
 						if (name) {
 							name = __Internal__.loadLocale(name, true);
 							return __Internal__.oldLocaleFn.call(this, name);
 						} else {
 							return __Internal__.oldLocaleFn.call(this);
 						};
-					};
+					}));
 
 					nodejsMoment.prototype.lang = nodejsMoment.prototype.locale = function locale(/*optional*/name) {
 						if (name) {
@@ -122,19 +122,19 @@ module.exports = {
 						};
 					};
 
-					moment.create = function create(/*paramarray*/) {
+					moment.ADD('create', function create(/*paramarray*/) {
 						const moment = nodejsMoment.apply(nodejsMoment, arguments);
 						const loc = locale.getCurrent();
 						if (types.has(loc, 'LC_MOMENT')) {
 							moment.locale(loc.LC_MOMENT.name);
 						};
 						return moment;
-					};
+					});
 
 					if (typeof moment.tz === 'function') {
 						__Internal__.hasTz = true;
 						__Internal__.oldTzLoad = moment.tz.load;
-						moment.tz = moment.tz; // Will make it read-only
+						moment.ADD('tz', moment.tz); // Will make it read-only
 						moment.tz.load = function(/*optional*/data) {
 							const Promise = types.getPromise();
 							if (types.isNothing(data)) {
@@ -153,18 +153,18 @@ module.exports = {
 							};
 						};
 					} else{
-						moment.tz = function(/*paramarray*/) {
+						moment.ADD('tz', function(/*paramarray*/) {
 							throw new types.NotAvailable("The library 'moment-timezone' is not available.");
-						};
+						});
 						moment.tz.load = function() {
 							var Promise = types.getPromise();
 							return Promise.reject(new types.NotAvailable("The library 'moment-timezone' is not available."));
 						};
 					};
 
-					moment.hasTz = function hasTz() {
+					moment.ADD('hasTz', function hasTz() {
 						return __Internal__.hasTz;
-					};
+					});
 
 					return function init(/*optional*/options) {
 						const loc = locale.getCurrent();

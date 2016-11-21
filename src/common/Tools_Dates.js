@@ -39,16 +39,16 @@ module.exports = {
 					dates = tools.Dates;
 
 				// Source: http://stackoverflow.com/questions/8619879/javascript-calculate-the-day-of-the-year-1-366
-				dates.isLeapYear = function isLeapYear(year) {
+				dates.ADD('isLeapYear', function isLeapYear(year) {
 					if ((year & 3) != 0) {
 						return false;
 					};
 					return ((year % 100) != 0 || (year % 400) == 0);
-				};
+				});
 
 				// Source: http://stackoverflow.com/questions/8619879/javascript-calculate-the-day-of-the-year-1-366
 				var __dayCount__ = [0, 31, 59, 90, 120, 151, 181, 212, 243, 273, 304, 334];
-				dates.getDayOfYear = function getDayOfYear(date, /*optional*/utc) {
+				dates.ADD('getDayOfYear', function getDayOfYear(date, /*optional*/utc) {
 					var mn = (utc ? date.getUTCMonth() : date.getMonth()),
 						dn = (utc ? date.getUTCDate() : date.getDate()),
 						dayOfYear = __dayCount__[mn] + dn;
@@ -56,7 +56,7 @@ module.exports = {
 						dayOfYear++;
 					};
 					return dayOfYear;
-				};
+				});
 				
 				/****************************************************************************************************/
 
@@ -92,14 +92,14 @@ module.exports = {
 					YDAY_MINIMUM = -366,
 					big_enough_multiple_of_7 = (_shared.Natives.mathFloor(-YDAY_MINIMUM / 7) + 2) * 7;
 					
-				dates.isoWeekDays = function isoWeekDays(yday, wday) {
+				dates.ADD('isoWeekDays', function isoWeekDays(yday, wday) {
 					/* Add enough to the first operand of % to make it nonnegative.  */
 					return (yday
 					- (yday - wday + ISO_WEEK1_WDAY + big_enough_multiple_of_7) % 7
 					+ ISO_WEEK1_WDAY - ISO_WEEK_START_WDAY);
-				};
+				});
 				
-				dates.strftime = function strftime(format, obj, /*optional*/loc, /*optional*/utc) {
+				dates.ADD('strftime', function strftime(format, obj, /*optional*/loc, /*optional*/utc) {
 					var current;
 					if (loc) {
 						current = loc.LC_TIME;
@@ -789,7 +789,7 @@ module.exports = {
 					};
 
 					return retval;
-				};	
+				});	
 				
 				/****************************************************************************************************/
 				
