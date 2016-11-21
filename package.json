@@ -1,6 +1,6 @@
 {
   "name": "doodad-js-dates",
-  "description": "Date formatting with locale support, and helper for 'moment'.",
+  "description": "Date formatting with locale support, and wrapper for 'moment'.",
   "version": "0.0.0",
   "files": [
 	"tonic.js"
