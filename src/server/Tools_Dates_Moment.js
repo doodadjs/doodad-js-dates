@@ -143,7 +143,7 @@ module.exports = {
 							if (types.isString(data)) {
 								data = files.Path.parse(data);
 							};
-							if (data instanceof files.Path) {
+							if (types._instanceof(data, files.Path)) {
 								return config.load(data, {encoding: 'utf-8', configPath: __options__.dataUri, async: true})
 									.then(function(packedData) {
 										return __Internal__.oldTzLoad.call(this, packedData);
