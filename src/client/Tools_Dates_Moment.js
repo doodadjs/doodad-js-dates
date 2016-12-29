@@ -69,6 +69,8 @@ module.exports = {
 
 
 					__Internal__.loadLocale = function loadLocale(name, /*optional*/globally) {
+						// DD_ROOT.Doodad.Tools.Locale.load('fr-FR').then(l=>DD_ROOT.Doodad.Tools.Dates.Moment.create().locale('fr-fr').format('LLLL')).then(console.log);
+
 						var ddName = locale.momentToDoodadName(name);
 						name = locale.doodadToMomentName(ddName);
 						if (!__Internal__.loaded[name]) {
@@ -76,21 +78,19 @@ module.exports = {
 								if (!locale.has(ddName)) {
 									throw new types.Error("You must load locale '~0~' using the 'Doodad.Tools.Locale.load' function.", [ddName]);
 								};
-								var data = types.get(locale.get(ddName), 'LC_MOMENT');
-								if (!data) {
+								var data = locale.get(ddName);
+								var LC_MOMENT = types.get(data, 'LC_MOMENT');
+								if (!LC_MOMENT) {
 									throw new types.Error("There is no data for 'moment' in locale '~0~'.", [ddName]);
-								};
-								var cur = moment.locale();
-								moment.defineLocale(name, data);
-								if (moment.locale() !== cur) {
-									moment.locale(cur); // <FIX> "moment.defineLocale" globally sets the new locale
 								};
 							};
 							__Internal__.loaded[name] = true;
 						};
+
 						if (globally) {
 							locale.setCurrent(ddName);
 						};
+
 						return name;
 					};
 
