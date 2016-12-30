@@ -69,7 +69,7 @@ module.exports = {
 
 
 					__Internal__.loadLocale = function loadLocale(name, /*optional*/globally) {
-						// DD_ROOT.Doodad.Tools.Locale.load('fr-FR').then(l=>DD_ROOT.Doodad.Tools.Dates.Moment.create().locale('fr-fr').format('LLLL')).then(console.log);
+						// DD_ROOT.Doodad.Tools.Locale.load('fr').then(l=>DD_ROOT.Doodad.Tools.Dates.Moment.create().locale(l.NAME).format('LLLL')).then(console.log);
 
 						var ddName = locale.momentToDoodadName(name);
 						name = locale.doodadToMomentName(ddName);
@@ -82,6 +82,21 @@ module.exports = {
 								var LC_MOMENT = types.get(data, 'LC_MOMENT');
 								if (!LC_MOMENT) {
 									throw new types.Error("There is no data for 'moment' in locale '~0~'.", [ddName]);
+								};
+								if (types.isString(LC_MOMENT)) {
+									var defineFake = function(whatever, factory) {
+										var cur = moment.locale();
+
+										data.LC_MOMENT = factory(moment);
+
+										if (moment.locale() !== cur) {
+											moment.locale(cur); // <FIX> "moment.defineLocale" globally sets the new locale
+										};
+									};
+									defineFake.amd = true;
+
+									var getData = new global.Function('exports', 'module', 'require', 'define', LC_MOMENT);
+									getData.call(global, undefined, undefined, undefined, defineFake);
 								};
 							};
 							__Internal__.loaded[name] = true;
@@ -159,7 +174,7 @@ module.exports = {
 					return function init(/*optional*/options) {
 						var loc = locale.getCurrent();
 						if (types.has(loc, 'LC_MOMENT')) {
-							global.moment.locale(loc.LC_MOMENT.name);
+							moment.locale(loc.NAME);
 						};
 						if (__Internal__.hasTz && !types.isNothing(__options__.dataUri)) {
 							return moment.tz.load();

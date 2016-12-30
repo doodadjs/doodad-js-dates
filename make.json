@@ -47,12 +47,6 @@
       "browserify": true
     },
     {
-      "src": "common/Tools_Locale_Parser.js",
-      "client": true,
-      "server": true,
-      "browserify": true
-    },
-    {
       "src": "client/Tools_Dates_Moment.js",
       "client": true,
       "server": false,
