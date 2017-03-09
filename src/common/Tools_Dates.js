@@ -32,7 +32,7 @@ module.exports = {
 			create: function create(root, /*optional*/_options, _shared) {
 				"use strict";
 
-				var doodad = root.Doodad,
+				const doodad = root.Doodad,
 					types = doodad.Types,
 					tools = doodad.Tools,
 					locale = tools.Locale,
@@ -47,11 +47,12 @@ module.exports = {
 				});
 
 				// Source: http://stackoverflow.com/questions/8619879/javascript-calculate-the-day-of-the-year-1-366
-				var __dayCount__ = [0, 31, 59, 90, 120, 151, 181, 212, 243, 273, 304, 334];
+				const __dayCount__ = [0, 31, 59, 90, 120, 151, 181, 212, 243, 273, 304, 334];
+
 				dates.ADD('getDayOfYear', function getDayOfYear(date, /*optional*/utc) {
-					var mn = (utc ? date.getUTCMonth() : date.getMonth()),
-						dn = (utc ? date.getUTCDate() : date.getDate()),
-						dayOfYear = __dayCount__[mn] + dn;
+					const mn = (utc ? date.getUTCMonth() : date.getMonth()),
+						dn = (utc ? date.getUTCDate() : date.getDate());
+					let dayOfYear = __dayCount__[mn] + dn;
 					if ((mn > 1) && dates.isLeapYear((utc ? date.getUTCFullYear() : date.getFullYear()))) {
 						dayOfYear++;
 					};
@@ -79,7 +80,7 @@ module.exports = {
 				   <http://www.gnu.org/licenses/>.  */
 				//! END_REPLACE()
 
-				//var tzset_called = false;
+				//let tzset_called = false;
 				
 				
 				types.complete(_shared.Natives, {
@@ -87,7 +88,7 @@ module.exports = {
 				});
 				
 				
-				var ISO_WEEK_START_WDAY = 1,
+				const ISO_WEEK_START_WDAY = 1,
 					ISO_WEEK1_WDAY = 4, /* Thursday */
 					YDAY_MINIMUM = -366,
 					big_enough_multiple_of_7 = (_shared.Natives.mathFloor(-YDAY_MINIMUM / 7) + 2) * 7;
@@ -100,14 +101,14 @@ module.exports = {
 				});
 				
 				dates.ADD('strftime', function strftime(format, obj, /*optional*/loc, /*optional*/utc) {
-					var current;
+					let current;
 					if (loc) {
 						current = loc.LC_TIME;
 					} else {
 						current = locale.getCurrent().LC_TIME
 					};
 					
-					var negative_number;
+					let negative_number = false;
 					
 					/* The POSIX test suite assumes that setting
 					 the environment variable TZ to a new value before calling strftime()
@@ -117,7 +118,7 @@ module.exports = {
 					 POSIX does not require it.  Do the right thing instead.  */
 
 					// NOTE: The offset sign is inverted
-					var zone = (utc ? 0 : -obj.getTimezoneOffset());
+					let zone = (utc ? 0 : -obj.getTimezoneOffset());
 					if (zone === 0) {
 						zone = 'UTC';
 					} else {
@@ -128,16 +129,28 @@ module.exports = {
 						zone = 'UTC' + (negative_number ? '-' : '+') + ('0' + _shared.Natives.mathFloor(zone / 60)).slice(-2) + ':' + ('0' + (zone % 60)).slice(-2);
 					};
 
-					var hour12 = (utc ? obj.getUTCHours() : obj.getHours());
+					let hour12 = (utc ? obj.getUTCHours() : obj.getHours());
 					if (hour12 > 12) {
 						hour12 -= 12;
 					} else if (hour12 == 0) {
 						hour12 = 12;
 					};
 					
+					let pad,		/* Padding for number ('-', '_', or null).  */
+						modifier,		/* Field modifier ('E', 'O', or null).  */
+						digits,		/* Max digits for numeric format.  */
+						number_value, 	/* Numeric value to be printed.  */
+						subfmt,
+						width,
+						to_lowcase,
+						to_uppcase,
+						change_case,
+						chr,
+						p = 0;
+
 					function do_number_sign_and_padding(str, digits) {
 						if (pad !== '-') {
-							var padding = digits - str.length;
+							let padding = digits - str.length;
 							if (negative_number) {
 								padding--;
 							};
@@ -169,7 +182,7 @@ module.exports = {
 						{
 							/* Get the locale specific alternate representation of
 							the number NUMBER_VALUE.  If none exist NULL is returned.  */
-							var cp = current.alt_digits[number_value];
+							const cp = current.alt_digits[number_value];
 
 							if (cp) {
 								return cpy (cp);
@@ -199,7 +212,7 @@ module.exports = {
 					};
 					
 					function add(s) {
-						var _delta = width - s.length;
+						const _delta = width - s.length;
 						if (_delta > 0) {
 							if (pad == '0')	{
 								s = tools.repeat('0', _delta) + s;
@@ -221,7 +234,7 @@ module.exports = {
 					};
 					
 					function subformat(subfmt) {
-						var retval = add(strftime(subfmt, obj, loc));
+						let retval = add(strftime(subfmt, obj, loc));
 
 						if (to_uppcase) {
 							retval = retval.toUpperCase();
@@ -231,8 +244,8 @@ module.exports = {
 					};
 
 					function bad_format() {
-						var retval = format.slice(p);
-						var pos = retval.indexOf('%');
+						let retval = format.slice(p);
+						const pos = retval.indexOf('%');
 						if (pos >= 0) {
 							retval = retval.slice(0, pos);
 						};
@@ -240,27 +253,26 @@ module.exports = {
 						return cpy(retval);
 					};
 					
-					var retval = '';
+					let retval = '';
 					  
-					var p = 0,
-						formatLen = format.length;
+					const formatLen = format.length;
 					
 					while (p < formatLen) {
-						var pad = null,		/* Padding for number ('-', '_', or null).  */
-							modifier = null,		/* Field modifier ('E', 'O', or null).  */
-							digits = 0,		/* Max digits for numeric format.  */
-							number_value = 0, 	/* Numeric value to be printed.  */
-							negative_number = false,	/* 1 if the number is negative.  */
-							subfmt = '',
-							width = -1,
-							to_lowcase = false,
-							to_uppcase = false,
-							change_case = false;
+						pad = null;		/* Padding for number ('-', '_', or null).  */
+						modifier = null;		/* Field modifier ('E', 'O', or null).  */
+						digits = 0;		/* Max digits for numeric format.  */
+						number_value = 0; 	/* Numeric value to be printed.  */
+						subfmt = '';
+						width = -1;
+						to_lowcase = false;
+						to_uppcase = false;
+						change_case = false;
+						negative_number = false;	/* 1 if the number is negative.  */
 
 						  /* Either multibyte encodings are not supported, they are
 						 safe for formats, so any non-'%' byte can be copied through,
 						 or this is the wide character version.  */
-						var chr = format[p];
+						chr = format[p];
 						if (chr !== '%')
 						{
 							retval += add (chr);
@@ -270,25 +282,29 @@ module.exports = {
 						
 						/* Check for flags that can modify a format.  */
 						while (p < formatLen) {
-							var chr = format[++p];
+							chr = format[++p];
 							switch (chr) {
 								/* This influences the number formats.  */
 								case '_':
 								case '-':
-								case '0':
+								case '0': {
 									pad = chr;
 									continue;
+								}
 
 								/* This changes textual output.  */
-								case '^':
+								case '^': {
 									to_uppcase = true;
 									continue;
-								case '#':
+								}
+								case '#': {
 									change_case = true;
 									continue;
+								}
 
-								default:
+								default: {
 									break;
+								}
 							};
 							break;
 						};
@@ -311,14 +327,16 @@ module.exports = {
 						};
 						switch (chr) {
 							case 'E':
-							case 'O':
+							case 'O': {
 								modifier = chr;
 								p++;
 								break;
+							}
 
-							default:
+							default: {
 								modifier = null;
 								break;
+							}
 						};
 
 						/* Now do the specified format.  */
@@ -327,15 +345,16 @@ module.exports = {
 						};
 						chr = format[p];
 						switch (chr) {
-							case '%':
+							case '%': {
 								if (modifier !== null) {
 									retval += bad_format();
 									break;
 								};
 								retval += add (chr);
 								break;
+							}
 
-							case 'a': // Short Weekday
+							case 'a': { // Short Weekday
 								if (modifier !== null) {
 									retval += bad_format();
 									break;
@@ -348,8 +367,9 @@ module.exports = {
 								retval += cpy (current.abday[(utc ? obj.getUTCDay() : obj.getDay())]);
 								
 								break;
+							}
 
-							case 'A': // Full Weekday
+							case 'A': { // Full Weekday
 								if (modifier !== null) {
 									retval += bad_format();
 									break;
@@ -361,9 +381,10 @@ module.exports = {
 								};
 								retval += cpy (current.day[(utc ? obj.getUTCDay() : obj.getDay())]);
 								break;
+							}
 
 							case 'b': // Short Month
-							case 'h':
+							case 'h': {
 								if (change_case)
 								{
 									to_uppcase = true;
@@ -375,8 +396,9 @@ module.exports = {
 								};
 								retval += cpy (current.abmon[(utc ? obj.getUTCMonth() : obj.getMonth())]);
 								break;
+							}
 
-							case 'B': // Full Month
+							case 'B': { // Full Month
 								if (modifier !== null) {
 									retval += bad_format();
 									break;
@@ -388,8 +410,9 @@ module.exports = {
 								}
 								retval += cpy (current.mon[(utc ? obj.getUTCMonth() : obj.getMonth())]);
 								break;
+							}
 
-							case 'c':
+							case 'c': {
 								if (modifier === 'O') {
 									retval += bad_format();
 									break;
@@ -400,8 +423,9 @@ module.exports = {
 
 								retval += subformat(subfmt);
 								break;
+							}
 
-							case 'C':	// Century
+							case 'C': {	// Century
 								if (modifier === 'E') {
 									retval += bad_format();
 									break;
@@ -414,11 +438,11 @@ module.exports = {
 		*/
 								};
 
-								var year = (utc ? obj.getUTCFullYear() : obj.getFullYear());
+								const year = (utc ? obj.getUTCFullYear() : obj.getFullYear());
 								retval += DO_NUMBER (1, _shared.Natives.mathFloor(year / 100) - (year % 100 < 0));
 								break;
-
-							case 'x':
+							}
+							case 'x': {
 								if (modifier === 'O') {
 									retval += bad_format();
 									break;
@@ -429,8 +453,9 @@ module.exports = {
 
 								retval += subformat(subfmt);
 								break;
+							}
 								
-							case 'D':
+							case 'D': {
 								if (modifier !== null) {
 									retval += bad_format();
 									break;
@@ -438,8 +463,9 @@ module.exports = {
 								subfmt = "%m/%d/%y";
 								retval += subformat(subfmt);
 								break;
+							}
 
-							case 'd': // Day of month
+							case 'd': { // Day of month
 								if (modifier === 'E') {
 									retval += bad_format();
 									break;
@@ -447,8 +473,9 @@ module.exports = {
 
 								retval += DO_NUMBER (2, (utc ? obj.getUTCDate() : obj.getDate()));
 								break;
+							}
 
-							case 'e': // Day of month (padding)
+							case 'e': { // Day of month (padding)
 								if (modifier == 'E') {
 									retval += bad_format();
 									break;
@@ -456,8 +483,9 @@ module.exports = {
 								
 								retval += DO_NUMBER_SPACEPAD (2, (utc ? obj.getUTCDate() : obj.getDate()));
 								break;
+							}
 
-							case 'F':
+							case 'F': {
 								if (modifier !== null) {
 									retval += bad_format();
 									break;
@@ -465,8 +493,9 @@ module.exports = {
 								subfmt = "%Y-%m-%d";
 								retval += subformat(subfmt);
 								break;
+							}
 
-							case 'H': // Hours 24
+							case 'H': { // Hours 24
 								if (modifier === 'E') {
 									retval += bad_format();
 									break;
@@ -474,8 +503,9 @@ module.exports = {
 								
 								retval += DO_NUMBER (2, (utc ? obj.getUTCHours() : obj.getHours()));
 								break;
+							}
 
-							case 'I': // Hours 12
+							case 'I': { // Hours 12
 								if (modifier == 'E') {
 									retval += bad_format();
 									break;
@@ -483,8 +513,9 @@ module.exports = {
 
 								retval += DO_NUMBER (2, hour12);
 								break;
+							}
 
-							case 'k': // Hour 24 (padding)		/* GNU extension.  */
+							case 'k': { // Hour 24 (padding)		/* GNU extension.  */
 								if (modifier === 'E') {
 									retval += bad_format();
 									break;
@@ -492,8 +523,9 @@ module.exports = {
 
 								retval += DO_NUMBER_SPACEPAD (2, (utc ? obj.getUTCHours() : obj.getHours()));
 								break;
+							}
 
-							case 'l': // Hour 12 (padding)		/* GNU extension.  */
+							case 'l': { // Hour 12 (padding)		/* GNU extension.  */
 								if (modifier === 'E') {
 									retval += bad_format();
 									break;
@@ -501,8 +533,9 @@ module.exports = {
 
 								retval += DO_NUMBER_SPACEPAD (2, hour12);
 								break;
+							}
 
-							case 'j':  // Day of year
+							case 'j': { // Day of year
 								if (modifier === 'E') {
 									retval += bad_format();
 									break;
@@ -510,8 +543,9 @@ module.exports = {
 
 								retval += DO_NUMBER (3, 1 + dates.getDayOfYear(obj, utc));
 								break;
+							}
 
-							case 'M': // Minutes
+							case 'M': { // Minutes
 								if (modifier === 'E') {
 									retval += bad_format();
 									break;
@@ -519,8 +553,9 @@ module.exports = {
 
 								retval += DO_NUMBER (2, (utc ? obj.getUTCMinutes() : obj.getMinutes()));
 								break;
+							}
 
-							case 'm': // Month
+							case 'm': { // Month
 								if (modifier === 'E') {
 									retval += bad_format();
 									break;
@@ -528,18 +563,21 @@ module.exports = {
 
 								retval += DO_NUMBER (2, (utc ? obj.getUTCMonth() : obj.getMonth()) + 1);
 								break;
+							}
 
-							case 'n': // New line
+							case 'n': { // New line
 								retval += add ('\n');
 								break;
+							}
 
-							case 'P': // am/pm
+							case 'P': { // am/pm
 								to_uppcase = false;
 								to_lowcase = true;
 								retval += cpy (current.am_pm[(utc ? obj.getUTCHours() : obj.getHours()) > 11 ? 1 : 0]);
 								break;
+							}
 
-							case 'p': // AM/PM
+							case 'p': { // AM/PM
 								if (change_case)
 								{
 								  to_uppcase = false;
@@ -547,20 +585,23 @@ module.exports = {
 								};
 								retval += cpy (current.am_pm[(utc ? obj.getUTCHours() : obj.getHours()) > 11 ? 1 : 0]);
 								break;
+							}
 
-							case 'R':
+							case 'R': {
 								subfmt = "%H:%M";
 								retval += subformat(subfmt);
 								break;
+							}
 
-							case 'r':
+							case 'r': {
 								if (!(subfmt = current.t_fmt_ampm)) {
 									subfmt = "%I:%M:%S %p";
 								};
 								retval += subformat(subfmt);
 								break;
+							}
 
-							case 'S': // Seconds
+							case 'S': { // Seconds
 								if (modifier === 'E') {
 									retval += bad_format();
 									break;
@@ -568,9 +609,10 @@ module.exports = {
 
 								retval += DO_NUMBER (2, (utc ? obj.getUTCSeconds() : obj.getSeconds()));
 								break;
+							}
 
 		/*
-							case 's':		/ * GNU extension.  * /
+							case 's': {		/ * GNU extension.  * /
 								struct tm ltm;
 								time_t t;
 
@@ -584,7 +626,7 @@ module.exports = {
 								negative_number = t < 0;
 
 								do {
-									var d = t % 10;
+									let d = t % 10;
 									t /= 10;
 
 									if (negative_number)
@@ -605,9 +647,10 @@ module.exports = {
 								digits = 1;
 								retval += do_number_sign_and_padding(buf, digits);
 								break;
+							}
 		*/
 
-							case 'X':
+							case 'X': {
 								if (modifier === 'O') {
 									retval += bad_format();
 									break;
@@ -617,21 +660,25 @@ module.exports = {
 								};
 								retval += subformat(subfmt);
 								break;
+							}
 						  
-							case 'T':
+							case 'T': {
 								subfmt = "%H:%M:%S";
 								retval += subformat(subfmt);
 								break;
+							}
 
-							case 't':  // Tab
+							case 't': { // Tab
 								retval += add ('\t');
 								break;
+							}
 
-							case 'u': // Day of week
+							case 'u': { // Day of week
 								retval += DO_NUMBER (1, ((utc ? obj.getUTCDay() : obj.getDay()) - 1 + 7) % 7 + 1);
 								break;
+							}
 
-							case 'U':
+							case 'U': {
 								if (modifier === 'E') {
 									retval += bad_format();
 									break;
@@ -639,15 +686,16 @@ module.exports = {
 
 								retval += DO_NUMBER (2, _shared.Natives.mathFloor((dates.getDayOfYear(obj, utc) - (utc ? obj.getUTCDay() : obj.getDay()) + 7) / 7));
 								break;
+							}
 
 							case 'V':
 							case 'g':
-							case 'G':
+							case 'G': {
 								if (modifier === 'E') {
 									retval += bad_format();
 									break;
 								};
-								var year = (utc ? obj.getUTCFullYear() : obj.getFullYear()),
+								let year = (utc ? obj.getUTCFullYear() : obj.getFullYear()),
 									days = dates.isoWeekDays(dates.getDayOfYear(obj, utc), (utc ? obj.getUTCDay() : obj.getDay()));
 
 								if (days < 0) {
@@ -655,7 +703,7 @@ module.exports = {
 									year--;
 									days = dates.isoWeekDays (dates.getDayOfYear(obj, utc) + (365 + dates.isLeapYear (year)), (utc ? obj.getUTCDay() : obj.getDay()));
 								} else {
-									var d = dates.isoWeekDays (dates.getDayOfYear(obj, utc) - (365 + dates.isLeapYear (year)), (utc ? obj.getUTCDay() : obj.getDay()));
+									const d = dates.isoWeekDays (dates.getDayOfYear(obj, utc) - (365 + dates.isLeapYear (year)), (utc ? obj.getUTCDay() : obj.getDay()));
 									if (0 <= d)
 									{
 										/* This ISO week belongs to the next year.  */
@@ -665,21 +713,25 @@ module.exports = {
 								};
 
 								switch (chr) {
-									case 'g':
+									case 'g': {
 										retval += DO_NUMBER (2, (year % 100 + 100) % 100);
 										break;
+									}
 
-									case 'G':
+									case 'G': {
 										retval += DO_NUMBER (1, year);
 										break;
+									}
 
-									default:
+									default: {
 										retval += DO_NUMBER (2, _shared.Natives.mathFloor(days / 7) + 1);
 										break;
+									}
 								};
 								break;
+							}
 
-							case 'W':  // Week of year
+							case 'W': { // Week of year
 								if (modifier === 'E') {
 									retval += bad_format();
 									break;
@@ -687,8 +739,9 @@ module.exports = {
 
 								retval += DO_NUMBER (2, _shared.Natives.mathFloor(((dates.getDayOfYear(obj, utc) - ((utc ? obj.getUTCDay() : obj.getDay()) - 1 + 7) % 7 + 7) / 7) + 0.5));
 								break;
+							}
 				
-							case 'w': // Week day number
+							case 'w': { // Week day number
 								if (modifier === 'E') {
 									retval += bad_format();
 									break;
@@ -696,11 +749,11 @@ module.exports = {
 
 								retval += DO_NUMBER (1, (utc ? obj.getUTCDay() : obj.getDay()));
 								break;
+							}
 
-							case 'Y':
+							case 'Y': {
 								if (modifier === 'E') {
 									retval += bad_format();
-									break;
 		/*
 									struct era_entry *era = _nl_get_era_entry (obj HELPER_LOCALE_ARG);
 									if (era) {
@@ -711,14 +764,13 @@ module.exports = {
 		*/
 								} else if (modifier === 'O') {
 									retval += bad_format();
-									break;
 								} else {
 									retval += DO_NUMBER (1, (utc ? obj.getUTCFullYear() : obj.getFullYear()));
-									break;
 								};
 								break;
+							}
 
-							case 'y':
+							case 'y': {
 								if (modifier === 'E') {
 									retval += bad_format();
 									break;
@@ -726,7 +778,7 @@ module.exports = {
 									struct era_entry *era = _nl_get_era_entry (obj HELPER_LOCALE_ARG);
 									if (era)
 									{
-										var delta = (utc ? obj.????() : obj.getYear()) - era->start_date[0];
+										const delta = (utc ? obj.????() : obj.getYear()) - era->start_date[0];
 										retval += DO_NUMBER (1, (era->offset + delta * era->absolute_direction));
 										break;
 									};
@@ -735,8 +787,9 @@ module.exports = {
 								
 								retval += DO_NUMBER (2, ((utc ? obj.getUTCFullYear() : obj.getFullYear()) % 100 + 100) % 100);
 								break;
+							}
 
-							case 'Z': // Timezone name
+							case 'Z': { // Timezone name
 								if (change_case)
 								{
 									to_uppcase = false;
@@ -749,8 +802,9 @@ module.exports = {
 
 								retval += cpy (zone);
 								break;
+							}
 
-							case 'z':  // Timezone offset
+							case 'z': { // Timezone offset
 				/*
 								if (obj->tm_isdst < 0) {
 									break;
@@ -758,7 +812,7 @@ module.exports = {
 				*/
 
 								// NOTE: The offset sign is inverted
-								var diff = (utc ? 0 : -obj.getTimezoneOffset());
+								let diff = (utc ? 0 : -obj.getTimezoneOffset());
 
 								if (diff < 0) {
 									retval += add ('-');
@@ -770,6 +824,7 @@ module.exports = {
 								//diff /= 60;
 								retval += DO_NUMBER (4, _shared.Natives.mathFloor(diff / 60 * 100) + (diff % 60));
 								break;
+							}
 
 		/*
 							case '\0':		/ * GNU extension: % at end of format.  * /
@@ -778,11 +833,12 @@ module.exports = {
 								break;
 		*/
 
-							default:
+							default: {
 						  /* Unknown format; output the format, including the '%',
 							 since this is most likely the right thing to do if a
 							 multibyte string has been misparsed.  */
 								retval += bad_format();
+							}
 						};
 						
 						p++;

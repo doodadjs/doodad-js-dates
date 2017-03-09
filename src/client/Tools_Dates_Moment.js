@@ -31,13 +31,13 @@ module.exports = {
 			DD_MODULES['Doodad.Tools.Dates.Moment'] = {
 				version: /*! REPLACE_BY(TO_SOURCE(VERSION(MANIFEST("name")))) */ null /*! END_REPLACE()*/,
 				proto: function(root) {
-					var types = root.Doodad.Types;
+					const types = root.Doodad.Types;
 					return types.nullObject(global.moment, {locale: types.CONFIGURABLE(global.moment.locale), lang: types.CONFIGURABLE(global.moment.lang), tz: types.CONFIGURABLE(global.moment.tz)});
 				},
 				create: function create(root, /*optional*/_options, _shared) {
 					"use strict";
 
-					var doodad = root.Doodad,
+					const doodad = root.Doodad,
 						types = doodad.Types,
 						tools = doodad.Tools,
 						locale = tools.Locale,
@@ -47,7 +47,7 @@ module.exports = {
 						config = tools.Config;
 
 
-					var __Internal__ = {
+					const __Internal__ = {
 						oldLocaleFn: global.moment.locale,
 						oldPrototypeLocaleFn: global.moment.prototype.locale,
 						hasTz: false, 
@@ -55,7 +55,7 @@ module.exports = {
 						loaded: types.nullObject(),
 					};
 
-					var __options__ = types.nullObject({
+					const __options__ = types.nullObject({
 						dataUri: null,
 					}, _options);
 
@@ -71,21 +71,21 @@ module.exports = {
 					__Internal__.loadLocale = function loadLocale(name, /*optional*/globally) {
 						// DD_ROOT.Doodad.Tools.Locale.load('fr').then(l=>DD_ROOT.Doodad.Tools.Dates.Moment.create().locale(l.NAME).format('LLLL')).then(console.log);
 
-						var ddName = locale.momentToDoodadName(name);
+						const ddName = locale.momentToDoodadName(name);
 						name = locale.doodadToMomentName(ddName);
 						if (!__Internal__.loaded[name]) {
 							if (tools.indexOf(moment.locales(), name) < 0) {
 								if (!locale.has(ddName)) {
 									throw new types.Error("You must load locale '~0~' using the 'Doodad.Tools.Locale.load' function.", [ddName]);
 								};
-								var data = locale.get(ddName);
-								var LC_MOMENT = types.get(data, 'LC_MOMENT');
+								const data = locale.get(ddName);
+								const LC_MOMENT = types.get(data, 'LC_MOMENT');
 								if (!LC_MOMENT) {
 									throw new types.Error("There is no data for 'moment' in locale '~0~'.", [ddName]);
 								};
 								if (types.isString(LC_MOMENT)) {
-									var defineFake = function(whatever, factory) {
-										var cur = moment.locale();
+									const defineFake = function(whatever, factory) {
+										const cur = moment.locale();
 
 										data.LC_MOMENT = factory(moment);
 
@@ -95,7 +95,7 @@ module.exports = {
 									};
 									defineFake.amd = true;
 
-									var getData = new global.Function('exports', 'module', 'require', 'define', LC_MOMENT);
+									const getData = new global.Function('exports', 'module', 'require', 'define', LC_MOMENT);
 									getData.call(global, undefined, undefined, undefined, defineFake);
 								};
 							};
@@ -128,8 +128,8 @@ module.exports = {
 					};
 
 					moment.ADD('create', function create(/*paramarray*/) {
-						var moment = global.moment.apply(global.moment, arguments);
-						var loc = locale.getCurrent();
+						const moment = global.moment.apply(global.moment, arguments);
+						const loc = locale.getCurrent();
 						if (types.has(loc, 'LC_MOMENT')) {
 							moment.locale(loc.LC_MOMENT.name);
 						};
@@ -141,7 +141,7 @@ module.exports = {
 						__Internal__.oldTzLoad = moment.tz.load;
 						moment.ADD('tz', moment.tz); // Will make it read-only
 						moment.tz.load = function(/*optional*/data) {
-							var Promise = types.getPromise();
+							const Promise = types.getPromise();
 							if (types.isNothing(data)) {
 								data = 'latest.json';
 							};
@@ -162,7 +162,7 @@ module.exports = {
 							throw new types.NotAvailable("The library 'moment-timezone' is not available.");
 						});
 						moment.tz.load = function() {
-							var Promise = types.getPromise();
+							const Promise = types.getPromise();
 							return Promise.reject(new types.NotAvailable("The library 'moment-timezone' is not available."));
 						};
 					};
@@ -172,7 +172,7 @@ module.exports = {
 					});
 
 					return function init(/*optional*/options) {
-						var loc = locale.getCurrent();
+						const loc = locale.getCurrent();
 						if (types.has(loc, 'LC_MOMENT')) {
 							moment.locale(loc.NAME);
 						};
