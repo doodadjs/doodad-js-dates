@@ -3,12 +3,12 @@
   "description": "Date formatting with locale support, and wrapper for 'moment'.",
   "version": "0.0.0",
   "files": [
-	"tonic.js"
+    "tonic.js"
   ],
   "keywords": [
     "doodad-js",
     "dates",
-	"strftime"
+    "strftime"
   ],
   "repository": {
     "type": "git",
@@ -19,8 +19,8 @@
     "email": "doodadjs@gmail.com"
   },
   "optionalDependencies": {
-    "moment": "^2.16.0",
-	"moment-timezone": "^0.5.9"
+    "moment": "^2.18.1",
+    "moment-timezone": "^0.5.13"
   },
   "tonicExampleFilename": "tonic.js"
 }
