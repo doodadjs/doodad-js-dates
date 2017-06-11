@@ -38,6 +38,32 @@ module.exports = {
 					locale = tools.Locale,
 					dates = tools.Dates;
 
+				
+					const DAY_SECONDS = 60 * 60 * 24;
+					const HOUR_SECONDS = 60 * 60;
+					const MINUTE_SECONDS = 60;
+
+				// TODO: Find a better name for this function
+				dates.ADD('secondsToPeriod', function secondsToPeriod(seconds) {
+					const days = tools.floor(seconds / DAY_SECONDS);
+					seconds -= days * DAY_SECONDS;
+
+					const hours = tools.floor(seconds / HOUR_SECONDS);
+					seconds -= hours * HOUR_SECONDS;
+					
+					const minutes = tools.floor(seconds / MINUTE_SECONDS);
+					seconds -= minutes * MINUTE_SECONDS;
+					
+					seconds = tools.round(seconds, 3);
+
+					return {
+						days: days, 
+						hours: hours, 
+						minutes: minutes, 
+						seconds: seconds,
+					};
+				});
+
 				// Source: http://stackoverflow.com/questions/8619879/javascript-calculate-the-day-of-the-year-1-366
 				dates.ADD('isLeapYear', function isLeapYear(year) {
 					if ((year & 3) != 0) {
