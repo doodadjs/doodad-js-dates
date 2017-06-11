@@ -38,21 +38,23 @@ module.exports = {
 					locale = tools.Locale,
 					dates = tools.Dates;
 
-				
-					const DAY_SECONDS = 60 * 60 * 24;
-					const HOUR_SECONDS = 60 * 60;
-					const MINUTE_SECONDS = 60;
+
+				const __Internal__ = {
+					DAY_SECONDS: 60 * 60 * 24,
+					HOUR_SECONDS: 60 * 60,
+					MINUTE_SECONDS: 60,
+				};
 
 				// TODO: Find a better name for this function
 				dates.ADD('secondsToPeriod', function secondsToPeriod(seconds) {
-					const days = tools.floor(seconds / DAY_SECONDS);
-					seconds -= days * DAY_SECONDS;
+					const days = tools.floor(seconds / __Internal__.DAY_SECONDS);
+					seconds -= days * __Internal__.DAY_SECONDS;
 
-					const hours = tools.floor(seconds / HOUR_SECONDS);
-					seconds -= hours * HOUR_SECONDS;
+					const hours = tools.floor(seconds / __Internal__.HOUR_SECONDS);
+					seconds -= hours * __Internal__.HOUR_SECONDS;
 					
-					const minutes = tools.floor(seconds / MINUTE_SECONDS);
-					seconds -= minutes * MINUTE_SECONDS;
+					const minutes = tools.floor(seconds / __Internal__.MINUTE_SECONDS);
+					seconds -= minutes * __Internal__.MINUTE_SECONDS;
 					
 					seconds = tools.round(seconds, 3);
 
@@ -73,12 +75,12 @@ module.exports = {
 				});
 
 				// Source: http://stackoverflow.com/questions/8619879/javascript-calculate-the-day-of-the-year-1-366
-				const __dayCount__ = [0, 31, 59, 90, 120, 151, 181, 212, 243, 273, 304, 334];
+				__Internal__.dayCount = [0, 31, 59, 90, 120, 151, 181, 212, 243, 273, 304, 334];
 
 				dates.ADD('getDayOfYear', function getDayOfYear(date, /*optional*/utc) {
 					const mn = (utc ? date.getUTCMonth() : date.getMonth()),
 						dn = (utc ? date.getUTCDate() : date.getDate());
-					let dayOfYear = __dayCount__[mn] + dn;
+					let dayOfYear = __Internal__.dayCount[mn] + dn;
 					if ((mn > 1) && dates.isLeapYear((utc ? date.getUTCFullYear() : date.getFullYear()))) {
 						dayOfYear++;
 					};
@@ -109,21 +111,16 @@ module.exports = {
 				//let tzset_called = false;
 				
 				
-				types.complete(_shared.Natives, {
-					mathFloor: global.Math.floor,
-				});
-				
-				
-				const ISO_WEEK_START_WDAY = 1,
-					ISO_WEEK1_WDAY = 4, /* Thursday */
-					YDAY_MINIMUM = -366,
-					big_enough_multiple_of_7 = (_shared.Natives.mathFloor(-YDAY_MINIMUM / 7) + 2) * 7;
+				__Internal__.ISO_WEEK_START_WDAY = 1;
+				__Internal__.ISO_WEEK1_WDAY = 4; /* Thursday */
+				__Internal__.YDAY_MINIMUM = -366;
+				__Internal__.big_enough_multiple_of_7 = (tools.floor(-__Internal__.YDAY_MINIMUM / 7) + 2) * 7;
 					
 				dates.ADD('isoWeekDays', function isoWeekDays(yday, wday) {
 					/* Add enough to the first operand of % to make it nonnegative.  */
 					return (yday
-					- (yday - wday + ISO_WEEK1_WDAY + big_enough_multiple_of_7) % 7
-					+ ISO_WEEK1_WDAY - ISO_WEEK_START_WDAY);
+					- (yday - wday + __Internal__.ISO_WEEK1_WDAY + __Internal__.big_enough_multiple_of_7) % 7
+					+ __Internal__.ISO_WEEK1_WDAY - __Internal__.ISO_WEEK_START_WDAY);
 				});
 				
 				dates.ADD('strftime', function strftime(format, obj, /*optional*/loc, /*optional*/utc) {
@@ -152,7 +149,7 @@ module.exports = {
 						if (negative_number) {
 							zone = -zone;
 						};
-						zone = 'UTC' + (negative_number ? '-' : '+') + ('0' + _shared.Natives.mathFloor(zone / 60)).slice(-2) + ':' + ('0' + (zone % 60)).slice(-2);
+						zone = 'UTC' + (negative_number ? '-' : '+') + ('0' + tools.floor(zone / 60)).slice(-2) + ':' + ('0' + (zone % 60)).slice(-2);
 					};
 
 					let hour12 = (utc ? obj.getUTCHours() : obj.getHours());
@@ -465,7 +462,7 @@ module.exports = {
 								};
 
 								const year = (utc ? obj.getUTCFullYear() : obj.getFullYear());
-								retval += DO_NUMBER (1, _shared.Natives.mathFloor(year / 100) - (year % 100 < 0));
+								retval += DO_NUMBER (1, tools.floor(year / 100) - (year % 100 < 0));
 								break;
 							}
 							case 'x': {
@@ -710,7 +707,7 @@ module.exports = {
 									break;
 								};
 
-								retval += DO_NUMBER (2, _shared.Natives.mathFloor((dates.getDayOfYear(obj, utc) - (utc ? obj.getUTCDay() : obj.getDay()) + 7) / 7));
+								retval += DO_NUMBER (2, tools.floor((dates.getDayOfYear(obj, utc) - (utc ? obj.getUTCDay() : obj.getDay()) + 7) / 7));
 								break;
 							}
 
@@ -750,7 +747,7 @@ module.exports = {
 									}
 
 									default: {
-										retval += DO_NUMBER (2, _shared.Natives.mathFloor(days / 7) + 1);
+										retval += DO_NUMBER (2, tools.floor(days / 7) + 1);
 										break;
 									}
 								};
@@ -763,7 +760,7 @@ module.exports = {
 									break;
 								};
 
-								retval += DO_NUMBER (2, _shared.Natives.mathFloor(((dates.getDayOfYear(obj, utc) - ((utc ? obj.getUTCDay() : obj.getDay()) - 1 + 7) % 7 + 7) / 7) + 0.5));
+								retval += DO_NUMBER (2, tools.floor(((dates.getDayOfYear(obj, utc) - ((utc ? obj.getUTCDay() : obj.getDay()) - 1 + 7) % 7 + 7) / 7) + 0.5));
 								break;
 							}
 				
@@ -848,7 +845,7 @@ module.exports = {
 								};
 
 								//diff /= 60;
-								retval += DO_NUMBER (4, _shared.Natives.mathFloor(diff / 60 * 100) + (diff % 60));
+								retval += DO_NUMBER (4, tools.floor(diff / 60 * 100) + (diff % 60));
 								break;
 							}
 
