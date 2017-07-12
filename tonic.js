@@ -1,11 +1,11 @@
-"use strict";
-
-const modules = {};
-require('doodad-js-unicode').add(modules);
-require('doodad-js-locale').add(modules);
-require('doodad-js-dates').add(modules);
-
-require('doodad-js').createRoot(modules)
+require('doodad-js').createRoot()
+	.then(root => {
+		return root.Doodad.Modules.load([
+			{
+				module: 'doodad-js-dates'
+			}
+		]);
+	})
 	.then(root => {
 		const dates = root.Doodad.Tools.Dates;
 		console.log( dates.strftime("%c", new Date()) );
