@@ -31,8 +31,9 @@ module.exports = {
 			DD_MODULES['Doodad.Tools.Dates.Moment'] = {
 				version: /*! REPLACE_BY(TO_SOURCE(VERSION(MANIFEST("name")))) */ null /*! END_REPLACE()*/,
 				proto: function(root) {
-					const types = root.Doodad.Types;
-					return types.nullObject(global.moment, {locale: types.CONFIGURABLE(global.moment.locale), lang: types.CONFIGURABLE(global.moment.lang), tz: types.CONFIGURABLE(global.moment.tz)});
+					const types = root.Doodad.Types,
+						tools = root.Doodad.Tools;
+					return tools.nullObject(global.moment, {locale: types.CONFIGURABLE(global.moment.locale), lang: types.CONFIGURABLE(global.moment.lang), tz: types.CONFIGURABLE(global.moment.tz)});
 				},
 				create: function create(root, /*optional*/_options, _shared) {
 					"use strict";
@@ -52,10 +53,10 @@ module.exports = {
 						oldPrototypeLocaleFn: global.moment.prototype.locale,
 						hasTz: false, 
 						oldTzLoad: null,
-						loaded: types.nullObject(),
+						loaded: tools.nullObject(),
 					};
 
-					const __options__ = types.nullObject({
+					const __options__ = tools.nullObject({
 						dataUri: null,
 					}, _options);
 
