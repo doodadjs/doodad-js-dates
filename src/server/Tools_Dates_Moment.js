@@ -24,29 +24,35 @@
 //	limitations under the License.
 //! END_REPLACE()
 
-// TODO: Convert the following to MJS
-let nodejsMoment = null;
-try {
-	const file = 'moment' + '-timezone'; // Prevent browserify
-	nodejsMoment = require(file);
-} catch(ex) {
+
+//! IF_SET('mjs')
+	// TODO: Make "moment-timezone" optional. For now, we can't !
+
+	//!	INJECT("import {default as nodeMoment} from 'moment-timezone';")
+//! ELSE()
+	let nodeMoment = null;
 	try {
-		const file = 'moment' + '/min/moment.min.js'; // Prevent browserify
-		nodejsMoment = require(file);
+		const pkg = 'moment-timezone'; // Prevent browserify
+		nodeMoment = require(pkg);
 	} catch(ex) {
+		try {
+			const pkg = 'moment'; // Prevent browserify
+			nodeMoment = require(pkg);
+		} catch(ex) {
+		};
 	};
-};
+//! END_IF()
 
 
 exports.add = function add(DD_MODULES) {
 	DD_MODULES = (DD_MODULES || {});
-	if (nodejsMoment) {
+	if (nodeMoment) {
 		DD_MODULES['Doodad.Tools.Dates.Moment'] = {
 			version: /*! REPLACE_BY(TO_SOURCE(VERSION(MANIFEST("name")))) */ null /*! END_REPLACE()*/,
 			proto: function(root) {
 				const types = root.Doodad.Types,
 					tools = root.Doodad.Tools;
-				return tools.nullObject(nodejsMoment, {locale: types.CONFIGURABLE(nodejsMoment.locale), lang: types.CONFIGURABLE(nodejsMoment.lang), tz: types.CONFIGURABLE(nodejsMoment.tz)});
+				return tools.nullObject(nodeMoment, {locale: types.CONFIGURABLE(nodeMoment.locale), lang: types.CONFIGURABLE(nodeMoment.lang), tz: types.CONFIGURABLE(nodeMoment.tz)});
 			},
 			create: function create(root, /*optional*/_options, _shared) {
 				"use strict";
@@ -59,8 +65,8 @@ exports.add = function add(DD_MODULES) {
 					moment = dates.Moment;
 
 				const __Internal__ = {
-					oldLocaleFn: nodejsMoment.locale,
-					oldPrototypeLocaleFn: nodejsMoment.prototype.locale,
+					oldLocaleFn: nodeMoment.locale,
+					oldPrototypeLocaleFn: nodeMoment.prototype.locale,
 					loaded: tools.nullObject(),
 					hasTz: false, 
 					oldTzLoad: null,
@@ -120,7 +126,7 @@ exports.add = function add(DD_MODULES) {
 					return name;
 				};
 
-				nodejsMoment.lang = nodejsMoment.locale = moment.ADD('lang', moment.ADD('locale', function locale(/*optional*/name) {
+				nodeMoment.lang = nodeMoment.locale = moment.ADD('lang', moment.ADD('locale', function locale(/*optional*/name) {
 					if (name) {
 						name = __Internal__.loadLocale(name, true);
 						return __Internal__.oldLocaleFn.call(this, name);
@@ -129,7 +135,7 @@ exports.add = function add(DD_MODULES) {
 					};
 				}));
 
-				nodejsMoment.prototype.lang = nodejsMoment.prototype.locale = function locale(/*optional*/name) {
+				nodeMoment.prototype.lang = nodeMoment.prototype.locale = function locale(/*optional*/name) {
 					if (name) {
 						name = __Internal__.loadLocale(name, false);
 						return __Internal__.oldPrototypeLocaleFn.call(this, name);
@@ -139,7 +145,7 @@ exports.add = function add(DD_MODULES) {
 				};
 
 				moment.ADD('create', function create(/*paramarray*/) {
-					const moment = nodejsMoment.apply(nodejsMoment, arguments);
+					const moment = nodeMoment.apply(nodeMoment, arguments);
 					const loc = locale.getCurrent();
 					if (types.has(loc, 'LC_MOMENT')) {
 						moment.locale(loc.LC_MOMENT.name);
@@ -185,7 +191,7 @@ exports.add = function add(DD_MODULES) {
 				return function init(/*optional*/options) {
 					const loc = locale.getCurrent();
 					if (types.has(loc, 'LC_MOMENT')) {
-						nodejsMoment.locale(loc.NAME);
+						nodeMoment.locale(loc.NAME);
 					};
 				};
 			},
