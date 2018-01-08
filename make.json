@@ -27,13 +27,13 @@
 	"stage": "b",
 	"dependencies": [
 		{
-			"name": "doodad-js",
+			"name": "@doodad-js/core",
 			"client": true,
 			"server": true,
 			"browserify": true
 		},
 		{
-			"name": "doodad-js-locale",
+			"name": "@doodad-js/locale",
 			"client": true,
 			"server": true,
 			"browserify": true

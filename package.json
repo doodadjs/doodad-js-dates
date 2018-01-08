@@ -1,5 +1,5 @@
 {
-  "name": "doodad-js-dates",
+  "name": "@doodad-js/dates",
   "description": "Date formatting with locale support, and wrapper for 'moment'.",
   "version": "0.0.0",
   "files": [
