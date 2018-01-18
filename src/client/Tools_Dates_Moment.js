@@ -127,8 +127,8 @@ exports.add = function add(DD_MODULES) {
 					};
 				};
 
-				moment.ADD('create', function create(/*paramarray*/) {
-					const moment = global.moment.apply(global.moment, arguments);
+				moment.ADD('create', function create(/*paramarray*/...args) {
+					const moment = global.moment(...args);
 					const loc = locale.getCurrent();
 					if (types.has(loc, 'LC_MOMENT')) {
 						moment.locale(loc.LC_MOMENT.name);
@@ -179,6 +179,7 @@ exports.add = function add(DD_MODULES) {
 					if (__Internal__.hasTz && !types.isNothing(__options__.dataUri)) {
 						return moment.tz.load();
 					};
+					return undefined;
 				};
 			},
 		};

@@ -32,13 +32,16 @@
 //! ELSE()
 	let nodeMoment = null;
 	try {
+		/* eslint global-require: "off", import/no-dynamic-require: "off" */
 		const pkg = 'moment-timezone'; // Prevent browserify
 		nodeMoment = require(pkg);
 	} catch(ex) {
 		try {
+			/* eslint global-require: "off", import/no-dynamic-require: "off" */
 			const pkg = 'moment'; // Prevent browserify
 			nodeMoment = require(pkg);
 		} catch(ex) {
+			// Do nothing
 		};
 	};
 //! END_IF()
@@ -60,6 +63,8 @@ exports.add = function add(DD_MODULES) {
 				const doodad = root.Doodad,
 					types = doodad.Types,
 					tools = doodad.Tools,
+					files = doodad.Files,
+					config = tools.Config,
 					locale = tools.Locale,
 					dates = tools.Dates,
 					moment = dates.Moment;
@@ -144,8 +149,8 @@ exports.add = function add(DD_MODULES) {
 					};
 				};
 
-				moment.ADD('create', function create(/*paramarray*/) {
-					const moment = nodeMoment.apply(nodeMoment, arguments);
+				moment.ADD('create', function create(/*paramarray*/...args) {
+					const moment = nodeMoment(...args);
 					const loc = locale.getCurrent();
 					if (types.has(loc, 'LC_MOMENT')) {
 						moment.locale(loc.LC_MOMENT.name);
@@ -179,7 +184,7 @@ exports.add = function add(DD_MODULES) {
 						throw new types.NotAvailable("The library 'moment-timezone' is not available.");
 					});
 					moment.tz.load = function() {
-						var Promise = types.getPromise();
+						const Promise = types.getPromise();
 						return Promise.reject(new types.NotAvailable("The library 'moment-timezone' is not available."));
 					};
 				};

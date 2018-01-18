@@ -31,6 +31,10 @@ exports.add = function add(DD_MODULES) {
 		create: function create(root, /*optional*/_options, _shared) {
 			"use strict";
 
+			// Code ported from C !!!
+			/* eslint camelcase: "off" */
+			/* eslint no-cond-assign: "off" */
+
 			const doodad = root.Doodad,
 				types = doodad.Types,
 				tools = doodad.Tools,
@@ -67,10 +71,10 @@ exports.add = function add(DD_MODULES) {
 
 			// Source: http://stackoverflow.com/questions/8619879/javascript-calculate-the-day-of-the-year-1-366
 			dates.ADD('isLeapYear', function isLeapYear(year) {
-				if ((year & 3) != 0) {
+				if ((year & 3) !== 0) {
 					return false;
 				};
-				return ((year % 100) != 0 || (year % 400) == 0);
+				return ((year % 100) !== 0 || (year % 400) === 0);
 			});
 
 			// Source: http://stackoverflow.com/questions/8619879/javascript-calculate-the-day-of-the-year-1-366
@@ -127,7 +131,7 @@ exports.add = function add(DD_MODULES) {
 				if (loc) {
 					current = loc.LC_TIME;
 				} else {
-					current = locale.getCurrent().LC_TIME
+					current = locale.getCurrent().LC_TIME;
 				};
 					
 				let negative_number = false;
@@ -154,14 +158,12 @@ exports.add = function add(DD_MODULES) {
 				let hour12 = (utc ? obj.getUTCHours() : obj.getHours());
 				if (hour12 > 12) {
 					hour12 -= 12;
-				} else if (hour12 == 0) {
+				} else if (hour12 === 0) {
 					hour12 = 12;
 				};
 					
 				let pad,		/* Padding for number ('-', '_', or null).  */
 					modifier,		/* Field modifier ('E', 'O', or null).  */
-					digits,		/* Max digits for numeric format.  */
-					number_value, 	/* Numeric value to be printed.  */
 					subfmt,
 					width,
 					to_lowcase,
@@ -178,7 +180,7 @@ exports.add = function add(DD_MODULES) {
 						};
 
 						if (padding > 0) {
-							if (pad == '_') {
+							if (pad === '_') {
 								str = tools.repeat(' ', padding) + str;
 								//width = width > padding ? width - padding : 0;
 							} else {
@@ -195,48 +197,10 @@ exports.add = function add(DD_MODULES) {
 					return str;
 				};
 					
-				function DO_NUMBER(digits, number_value) {
-					digits = digits > width ? digits : width;
-						
-					/* Format the number according to the MODIFIER flag.  */
-
-					if ((modifier === 'O') && (0 <= number_value))
-					{
-						/* Get the locale specific alternate representation of
-						the number NUMBER_VALUE.  If none exist NULL is returned.  */
-						const cp = current.alt_digits[number_value];
-
-						if (cp) {
-							return cpy (cp);
-						};
-					};
-						
-					negative_number = number_value < 0;
-
-					if (negative_number) {
-						number_value = -number_value;
-					};
-					  
-					return do_number_sign_and_padding(types.toString(number_value), digits);
-				};
-					
-				function DO_NUMBER_SPACEPAD(digits, number_value) {
-					/* Force `_' flag unless overwritten by `0' or '-' flag.  */
-					if ((pad !== '0') && (pad !== '-')) {
-						pad = '_';
-					};
-
-					return DO_NUMBER(digits, number_value);
-				};
-					
-				function ISDIGIT(chr) {
-					return ((chr >= '0') && (chr <= '9'));
-				};
-					
 				function add(s) {
 					const _delta = width - s.length;
 					if (_delta > 0) {
-						if (pad == '0')	{
+						if (pad === '0')	{
 							s = tools.repeat('0', _delta) + s;
 						} else {
 							s = tools.repeat(' ', _delta) + s;
@@ -253,6 +217,43 @@ exports.add = function add(DD_MODULES) {
 						s = s.toUpperCase();
 					};
 					return s;
+				};
+					
+				function DO_NUMBER(digits, number_value) {
+					digits = digits > width ? digits : width;
+						
+					/* Format the number according to the MODIFIER flag.  */
+
+					if ((modifier === 'O') && (number_value >= 0)) {
+						/* Get the locale specific alternate representation of
+						the number NUMBER_VALUE.  If none exist NULL is returned.  */
+						const cp = current.alt_digits[number_value];
+
+						if (cp) {
+							return cpy(cp);
+						};
+					};
+						
+					negative_number = number_value < 0;
+
+					if (negative_number) {
+						number_value = -number_value;
+					};
+					
+					return do_number_sign_and_padding(types.toString(number_value), digits);
+				};
+					
+				function DO_NUMBER_SPACEPAD(digits, number_value) {
+					/* Force `_' flag unless overwritten by `0' or '-' flag.  */
+					if ((pad !== '0') && (pad !== '-')) {
+						pad = '_';
+					};
+
+					return DO_NUMBER(digits, number_value);
+				};
+					
+				function ISDIGIT(chr) {
+					return ((chr >= '0') && (chr <= '9'));
 				};
 					
 				function subformat(subfmt) {
@@ -276,14 +277,14 @@ exports.add = function add(DD_MODULES) {
 				};
 					
 				let retval = '';
-					  
+				
 				const formatLen = format.length;
 					
 				while (p < formatLen) {
 					pad = null;		/* Padding for number ('-', '_', or null).  */
 					modifier = null;		/* Field modifier ('E', 'O', or null).  */
-					digits = 0;		/* Max digits for numeric format.  */
-					number_value = 0; 	/* Numeric value to be printed.  */
+					//let digits = 0;		/* Max digits for numeric format.  */
+					//let number_value = 0; 	/* Numeric value to be printed.  */
 					subfmt = '';
 					width = -1;
 					to_lowcase = false;
@@ -295,9 +296,8 @@ exports.add = function add(DD_MODULES) {
 						safe for formats, so any non-'%' byte can be copied through,
 						or this is the wide character version.  */
 					chr = format[p];
-					if (chr !== '%')
-					{
-						retval += add (chr);
+					if (chr !== '%') {
+						retval += add(chr);
 						p++;
 						continue;
 					};
@@ -372,7 +372,7 @@ exports.add = function add(DD_MODULES) {
 								retval += bad_format();
 								break;
 							};
-							retval += add (chr);
+							retval += add(chr);
 							break;
 						}
 
@@ -381,12 +381,11 @@ exports.add = function add(DD_MODULES) {
 								retval += bad_format();
 								break;
 							};
-							if (change_case)
-							{
+							if (change_case) {
 								to_uppcase = true;
 								to_lowcase = false;
 							};
-							retval += cpy (current.abday[(utc ? obj.getUTCDay() : obj.getDay())]);
+							retval += cpy(current.abday[(utc ? obj.getUTCDay() : obj.getDay())]);
 								
 							break;
 						}
@@ -396,19 +395,17 @@ exports.add = function add(DD_MODULES) {
 								retval += bad_format();
 								break;
 							};
-							if (change_case)
-							{
+							if (change_case) {
 								to_uppcase = true;
 								to_lowcase = false;
 							};
-							retval += cpy (current.day[(utc ? obj.getUTCDay() : obj.getDay())]);
+							retval += cpy(current.day[(utc ? obj.getUTCDay() : obj.getDay())]);
 							break;
 						}
 
 						case 'b': // Short Month
 						case 'h': {
-							if (change_case)
-							{
+							if (change_case) {
 								to_uppcase = true;
 								to_lowcase = false;
 							}
@@ -416,7 +413,7 @@ exports.add = function add(DD_MODULES) {
 								retval += bad_format();
 								break;
 							};
-							retval += cpy (current.abmon[(utc ? obj.getUTCMonth() : obj.getMonth())]);
+							retval += cpy(current.abmon[(utc ? obj.getUTCMonth() : obj.getMonth())]);
 							break;
 						}
 
@@ -425,12 +422,11 @@ exports.add = function add(DD_MODULES) {
 								retval += bad_format();
 								break;
 							};
-							if (change_case)
-							{
+							if (change_case) {
 								to_uppcase = true;
 								to_lowcase = false;
 							}
-							retval += cpy (current.mon[(utc ? obj.getUTCMonth() : obj.getMonth())]);
+							retval += cpy(current.mon[(utc ? obj.getUTCMonth() : obj.getMonth())]);
 							break;
 						}
 
@@ -461,7 +457,7 @@ exports.add = function add(DD_MODULES) {
 							};
 
 							const year = (utc ? obj.getUTCFullYear() : obj.getFullYear());
-							retval += DO_NUMBER (1, tools.floor(year / 100) - (year % 100 < 0));
+							retval += DO_NUMBER(1, tools.floor(year / 100) - (year % 100 < 0));
 							break;
 						}
 						case 'x': {
@@ -493,17 +489,17 @@ exports.add = function add(DD_MODULES) {
 								break;
 							};
 
-							retval += DO_NUMBER (2, (utc ? obj.getUTCDate() : obj.getDate()));
+							retval += DO_NUMBER(2, (utc ? obj.getUTCDate() : obj.getDate()));
 							break;
 						}
 
 						case 'e': { // Day of month (padding)
-							if (modifier == 'E') {
+							if (modifier === 'E') {
 								retval += bad_format();
 								break;
 							};
 								
-							retval += DO_NUMBER_SPACEPAD (2, (utc ? obj.getUTCDate() : obj.getDate()));
+							retval += DO_NUMBER_SPACEPAD(2, (utc ? obj.getUTCDate() : obj.getDate()));
 							break;
 						}
 
@@ -523,17 +519,17 @@ exports.add = function add(DD_MODULES) {
 								break;
 							};
 								
-							retval += DO_NUMBER (2, (utc ? obj.getUTCHours() : obj.getHours()));
+							retval += DO_NUMBER(2, (utc ? obj.getUTCHours() : obj.getHours()));
 							break;
 						}
 
 						case 'I': { // Hours 12
-							if (modifier == 'E') {
+							if (modifier === 'E') {
 								retval += bad_format();
 								break;
 							};
 
-							retval += DO_NUMBER (2, hour12);
+							retval += DO_NUMBER(2, hour12);
 							break;
 						}
 
@@ -543,7 +539,7 @@ exports.add = function add(DD_MODULES) {
 								break;
 							};
 
-							retval += DO_NUMBER_SPACEPAD (2, (utc ? obj.getUTCHours() : obj.getHours()));
+							retval += DO_NUMBER_SPACEPAD(2, (utc ? obj.getUTCHours() : obj.getHours()));
 							break;
 						}
 
@@ -553,7 +549,7 @@ exports.add = function add(DD_MODULES) {
 								break;
 							};
 
-							retval += DO_NUMBER_SPACEPAD (2, hour12);
+							retval += DO_NUMBER_SPACEPAD(2, hour12);
 							break;
 						}
 
@@ -563,7 +559,7 @@ exports.add = function add(DD_MODULES) {
 								break;
 							};
 
-							retval += DO_NUMBER (3, 1 + dates.getDayOfYear(obj, utc));
+							retval += DO_NUMBER(3, 1 + dates.getDayOfYear(obj, utc));
 							break;
 						}
 
@@ -573,7 +569,7 @@ exports.add = function add(DD_MODULES) {
 								break;
 							};
 
-							retval += DO_NUMBER (2, (utc ? obj.getUTCMinutes() : obj.getMinutes()));
+							retval += DO_NUMBER(2, (utc ? obj.getUTCMinutes() : obj.getMinutes()));
 							break;
 						}
 
@@ -583,29 +579,28 @@ exports.add = function add(DD_MODULES) {
 								break;
 							};
 
-							retval += DO_NUMBER (2, (utc ? obj.getUTCMonth() : obj.getMonth()) + 1);
+							retval += DO_NUMBER(2, (utc ? obj.getUTCMonth() : obj.getMonth()) + 1);
 							break;
 						}
 
 						case 'n': { // New line
-							retval += add ('\n');
+							retval += add('\n');
 							break;
 						}
 
 						case 'P': { // am/pm
 							to_uppcase = false;
 							to_lowcase = true;
-							retval += cpy (current.am_pm[(utc ? obj.getUTCHours() : obj.getHours()) > 11 ? 1 : 0]);
+							retval += cpy(current.am_pm[(utc ? obj.getUTCHours() : obj.getHours()) > 11 ? 1 : 0]);
 							break;
 						}
 
 						case 'p': { // AM/PM
-							if (change_case)
-							{
+							if (change_case) {
 								to_uppcase = false;
 								to_lowcase = true;
 							};
-							retval += cpy (current.am_pm[(utc ? obj.getUTCHours() : obj.getHours()) > 11 ? 1 : 0]);
+							retval += cpy(current.am_pm[(utc ? obj.getUTCHours() : obj.getHours()) > 11 ? 1 : 0]);
 							break;
 						}
 
@@ -629,7 +624,7 @@ exports.add = function add(DD_MODULES) {
 								break;
 							};
 
-							retval += DO_NUMBER (2, (utc ? obj.getUTCSeconds() : obj.getSeconds()));
+							retval += DO_NUMBER(2, (utc ? obj.getUTCSeconds() : obj.getSeconds()));
 							break;
 						}
 
@@ -683,7 +678,7 @@ exports.add = function add(DD_MODULES) {
 							retval += subformat(subfmt);
 							break;
 						}
-						  
+
 						case 'T': {
 							subfmt = "%H:%M:%S";
 							retval += subformat(subfmt);
@@ -691,12 +686,12 @@ exports.add = function add(DD_MODULES) {
 						}
 
 						case 't': { // Tab
-							retval += add ('\t');
+							retval += add('\t');
 							break;
 						}
 
 						case 'u': { // Day of week
-							retval += DO_NUMBER (1, ((utc ? obj.getUTCDay() : obj.getDay()) - 1 + 7) % 7 + 1);
+							retval += DO_NUMBER(1, ((utc ? obj.getUTCDay() : obj.getDay()) - 1 + 7) % 7 + 1);
 							break;
 						}
 
@@ -706,7 +701,7 @@ exports.add = function add(DD_MODULES) {
 								break;
 							};
 
-							retval += DO_NUMBER (2, tools.floor((dates.getDayOfYear(obj, utc) - (utc ? obj.getUTCDay() : obj.getDay()) + 7) / 7));
+							retval += DO_NUMBER(2, tools.floor((dates.getDayOfYear(obj, utc) - (utc ? obj.getUTCDay() : obj.getDay()) + 7) / 7));
 							break;
 						}
 
@@ -723,11 +718,10 @@ exports.add = function add(DD_MODULES) {
 							if (days < 0) {
 								/* This ISO week belongs to the previous year.  */
 								year--;
-								days = dates.isoWeekDays (dates.getDayOfYear(obj, utc) + (365 + dates.isLeapYear (year)), (utc ? obj.getUTCDay() : obj.getDay()));
+								days = dates.isoWeekDays(dates.getDayOfYear(obj, utc) + (365 + dates.isLeapYear(year)), (utc ? obj.getUTCDay() : obj.getDay()));
 							} else {
-								const d = dates.isoWeekDays (dates.getDayOfYear(obj, utc) - (365 + dates.isLeapYear (year)), (utc ? obj.getUTCDay() : obj.getDay()));
-								if (0 <= d)
-								{
+								const d = dates.isoWeekDays(dates.getDayOfYear(obj, utc) - (365 + dates.isLeapYear(year)), (utc ? obj.getUTCDay() : obj.getDay()));
+								if (d >= 0) {
 									/* This ISO week belongs to the next year.  */
 									year++;
 									days = d;
@@ -736,17 +730,17 @@ exports.add = function add(DD_MODULES) {
 
 							switch (chr) {
 								case 'g': {
-									retval += DO_NUMBER (2, (year % 100 + 100) % 100);
+									retval += DO_NUMBER(2, (year % 100 + 100) % 100);
 									break;
 								}
 
 								case 'G': {
-									retval += DO_NUMBER (1, year);
+									retval += DO_NUMBER(1, year);
 									break;
 								}
 
 								default: {
-									retval += DO_NUMBER (2, tools.floor(days / 7) + 1);
+									retval += DO_NUMBER(2, tools.floor(days / 7) + 1);
 									break;
 								}
 							};
@@ -759,7 +753,7 @@ exports.add = function add(DD_MODULES) {
 								break;
 							};
 
-							retval += DO_NUMBER (2, tools.floor(((dates.getDayOfYear(obj, utc) - ((utc ? obj.getUTCDay() : obj.getDay()) - 1 + 7) % 7 + 7) / 7) + 0.5));
+							retval += DO_NUMBER(2, tools.floor(((dates.getDayOfYear(obj, utc) - ((utc ? obj.getUTCDay() : obj.getDay()) - 1 + 7) % 7 + 7) / 7) + 0.5));
 							break;
 						}
 				
@@ -769,7 +763,7 @@ exports.add = function add(DD_MODULES) {
 								break;
 							};
 
-							retval += DO_NUMBER (1, (utc ? obj.getUTCDay() : obj.getDay()));
+							retval += DO_NUMBER(1, (utc ? obj.getUTCDay() : obj.getDay()));
 							break;
 						}
 
@@ -787,7 +781,7 @@ exports.add = function add(DD_MODULES) {
 							} else if (modifier === 'O') {
 								retval += bad_format();
 							} else {
-								retval += DO_NUMBER (1, (utc ? obj.getUTCFullYear() : obj.getFullYear()));
+								retval += DO_NUMBER(1, (utc ? obj.getUTCFullYear() : obj.getFullYear()));
 							};
 							break;
 						}
@@ -807,13 +801,12 @@ exports.add = function add(DD_MODULES) {
 	*/
 							};
 								
-							retval += DO_NUMBER (2, ((utc ? obj.getUTCFullYear() : obj.getFullYear()) % 100 + 100) % 100);
+							retval += DO_NUMBER(2, ((utc ? obj.getUTCFullYear() : obj.getFullYear()) % 100 + 100) % 100);
 							break;
 						}
 
 						case 'Z': { // Timezone name
-							if (change_case)
-							{
+							if (change_case) {
 								to_uppcase = false;
 								to_lowcase = true;
 							};
@@ -822,7 +815,7 @@ exports.add = function add(DD_MODULES) {
 								zone = "";
 							};
 
-							retval += cpy (zone);
+							retval += cpy(zone);
 							break;
 						}
 
@@ -837,14 +830,14 @@ exports.add = function add(DD_MODULES) {
 							let diff = (utc ? 0 : -obj.getTimezoneOffset());
 
 							if (diff < 0) {
-								retval += add ('-');
+								retval += add('-');
 								diff = -diff;
 							} else {
-								retval += add ('+');
+								retval += add('+');
 							};
 
 							//diff /= 60;
-							retval += DO_NUMBER (4, tools.floor(diff / 60 * 100) + (diff % 60));
+							retval += DO_NUMBER(4, tools.floor(diff / 60 * 100) + (diff % 60));
 							break;
 						}
 
