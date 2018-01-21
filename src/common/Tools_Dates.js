@@ -32,7 +32,7 @@ exports.add = function add(DD_MODULES) {
 			"use strict";
 
 			// Code ported from C !!!
-			/* eslint camelcase: "off" */
+			/* eslint camelcase: "off", id-match: "off" */
 			/* eslint no-cond-assign: "off" */
 
 			const doodad = root.Doodad,
