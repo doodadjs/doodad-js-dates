@@ -30,6 +30,8 @@
 
 	//!	INJECT("import {default as nodeMoment} from 'moment-timezone';")
 //! ELSE()
+	"use strict";
+
 	let nodeMoment = null;
 	try {
 		/* eslint global-require: "off", import/no-dynamic-require: "off" */
@@ -58,8 +60,6 @@ exports.add = function add(DD_MODULES) {
 				return tools.nullObject(nodeMoment, {locale: types.CONFIGURABLE(nodeMoment.locale), lang: types.CONFIGURABLE(nodeMoment.lang), tz: types.CONFIGURABLE(nodeMoment.tz)});
 			},
 			create: function create(root, /*optional*/_options, _shared) {
-				"use strict";
-
 				const doodad = root.Doodad,
 					types = doodad.Types,
 					tools = doodad.Tools,
