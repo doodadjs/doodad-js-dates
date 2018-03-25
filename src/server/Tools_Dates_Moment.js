@@ -77,7 +77,7 @@ exports.add = function add(DD_MODULES) {
 					oldTzLoad: null,
 				};
 
-				const __options__ = tools.nullObject({
+				let __options__ = tools.nullObject({
 					dataUri: null,
 				}, _options);
 
@@ -89,7 +89,15 @@ exports.add = function add(DD_MODULES) {
 					return __options__;
 				});
 
-
+				moment.ADD('setOptions', function setOptions(options) {
+					const newOptions = tools.nullObject(__options__, options);
+					newOptions.dataUri = files.parsePath(newOptions.dataUri);
+					__options__ = types.freezeObject(newOptions);
+					return __options__;
+				});
+	
+				tools.setOptions(_options);
+	
 				__Internal__.loadLocale = function loadLocale(name, /*optional*/globally) {
 					// tools.Locale.load('fr').then(l=>tools.Dates.Moment.create().locale(l.NAME).format('LLLL')).then(console.log);
 
@@ -158,46 +166,56 @@ exports.add = function add(DD_MODULES) {
 					return moment;
 				});
 
-				if (typeof moment.tz === 'function') {
-					__Internal__.hasTz = true;
-					__Internal__.oldTzLoad = moment.tz.load;
-					moment.ADD('tz', moment.tz); // Will make it read-only
-					moment.tz.load = function(/*optional*/data) {
-						const Promise = types.getPromise();
-						if (types.isNothing(data)) {
-							data = 'latest.json';
-						};
-						if (types.isString(data)) {
-							data = files.Path.parse(data);
-						};
-						if (types._instanceof(data, files.Path)) {
-							return config.load(data, {encoding: 'utf-8', configPath: __options__.dataUri, async: true})
-								.then(function(packedData) {
-									return __Internal__.oldTzLoad.call(this, packedData);
-								}, null, this);
-						} else {
-							return Promise.resolve(__Internal__.oldTzLoad.call(this, data));
-						};
-					};
-				} else{
-					moment.ADD('tz', function(/*paramarray*/) {
-						throw new types.NotAvailable("The library 'moment-timezone' is not available.");
-					});
-					moment.tz.load = function() {
-						const Promise = types.getPromise();
-						return Promise.reject(new types.NotAvailable("The library 'moment-timezone' is not available."));
-					};
-				};
 
 				moment.ADD('hasTz', function hasTz() {
 					return __Internal__.hasTz;
 				});
 
+
 				return function init(/*optional*/options) {
+					const Promise = types.getPromise();
+
 					const loc = locale.getCurrent();
 					if (types.has(loc, 'LC_MOMENT')) {
 						nodeMoment.locale(loc.NAME);
 					};
+
+					if (typeof moment.tz === 'function') {
+						__Internal__.hasTz = true;
+
+						moment.ADD('tz', moment.tz);
+						__Internal__.oldTzLoad = moment.tz.load;
+
+						moment.tz.load = function(/*optional*/pathOrData) {
+							return Promise.try(function tryLoad() {
+								if (types.isNothing(pathOrData)) {
+									pathOrData = 'latest.json';
+								};
+								if (types.isString(pathOrData)) {
+									pathOrData = files.parsePath(pathOrData);
+								};
+								if (types._instanceof(pathOrData, [files.Path, files.Url])) {
+									return config.load(__options__.dataUri.combine(pathOrData))
+										.then(function(data) {
+											return __Internal__.oldTzLoad.call(this, data);
+										}, null, this);
+								} else {
+									return __Internal__.oldTzLoad.call(this, pathOrData);
+								};
+							});
+						};
+
+						if (!types.isNothing(__options__.dataUri)) {
+							return moment.tz.load();
+						};
+
+					} else {
+						moment.ADD('tz', function(name) {
+							throw new types.NotAvailable("The library 'moment-timezone' is not available.");
+						});
+					};
+
+					return undefined;
 				};
 			},
 		};
