@@ -29,9 +29,9 @@
 	"use strict";
 //! END_IF()
 
-exports.add = function add(DD_MODULES) {
-	DD_MODULES = (DD_MODULES || {});
-	DD_MODULES['Doodad.Tools.Dates'] = {
+exports.add = function add(modules) {
+	modules = (modules || {});
+	modules['Doodad.Tools.Dates'] = {
 		version: /*! REPLACE_BY(TO_SOURCE(VERSION(MANIFEST("name")))) */ null /*! END_REPLACE()*/,
 		create: function create(root, /*optional*/_options, _shared) {
 			// Code ported from C !!!
@@ -873,7 +873,7 @@ exports.add = function add(DD_MODULES) {
 			//};
 		},
 	};
-	return DD_MODULES;
+	return modules;
 };
 
 //! END_MODULE()

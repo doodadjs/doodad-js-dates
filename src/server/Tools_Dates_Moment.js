@@ -49,10 +49,10 @@
 //! END_IF()
 
 
-exports.add = function add(DD_MODULES) {
-	DD_MODULES = (DD_MODULES || {});
+exports.add = function add(modules) {
+	modules = (modules || {});
 	if (nodeMoment) {
-		DD_MODULES['Doodad.Tools.Dates.Moment'] = {
+		modules['Doodad.Tools.Dates.Moment'] = {
 			version: /*! REPLACE_BY(TO_SOURCE(VERSION(MANIFEST("name")))) */ null /*! END_REPLACE()*/,
 			proto: function(root) {
 				const types = root.Doodad.Types,
@@ -220,7 +220,7 @@ exports.add = function add(DD_MODULES) {
 			},
 		};
 	};
-	return DD_MODULES;
+	return modules;
 };
 
 //! END_MODULE()
