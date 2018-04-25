@@ -26,7 +26,7 @@
 
 //! IF_SET("mjs")
 //! ELSE()
-	"use strict";
+"use strict";
 //! END_IF()
 
 exports.add = function add(modules) {
@@ -295,7 +295,7 @@ exports.add = function add(modules) {
 					change_case = false;
 					negative_number = false;	/* 1 if the number is negative.  */
 
-						/* Either multibyte encodings are not supported, they are
+					/* Either multibyte encodings are not supported, they are
 						safe for formats, so any non-'%' byte can be copied through,
 						or this is the wide character version.  */
 					chr = format[p];
@@ -309,27 +309,27 @@ exports.add = function add(modules) {
 					while (p < formatLen) {
 						chr = format[++p];
 						switch (chr) {
-							/* This influences the number formats.  */
-							case '_':
-							case '-':
-							case '0': {
-								pad = chr;
-								continue;
-							}
+						/* This influences the number formats.  */
+						case '_':
+						case '-':
+						case '0': {
+							pad = chr;
+							continue;
+						}
 
-							/* This changes textual output.  */
-							case '^': {
-								to_uppcase = true;
-								continue;
-							}
-							case '#': {
-								change_case = true;
-								continue;
-							}
+						/* This changes textual output.  */
+						case '^': {
+							to_uppcase = true;
+							continue;
+						}
+						case '#': {
+							change_case = true;
+							continue;
+						}
 
-							default: {
-								break;
-							}
+						default: {
+							break;
+						}
 						};
 						break;
 					};
@@ -351,17 +351,17 @@ exports.add = function add(modules) {
 						break;
 					};
 					switch (chr) {
-						case 'E':
-						case 'O': {
-							modifier = chr;
-							p++;
-							break;
-						}
+					case 'E':
+					case 'O': {
+						modifier = chr;
+						p++;
+						break;
+					}
 
-						default: {
-							modifier = null;
-							break;
-						}
+					default: {
+						modifier = null;
+						break;
+					}
 					};
 
 					/* Now do the specified format.  */
@@ -370,268 +370,268 @@ exports.add = function add(modules) {
 					};
 					chr = format[p];
 					switch (chr) {
-						case '%': {
-							if (modifier !== null) {
-								retval += bad_format();
-								break;
-							};
-							retval += add(chr);
+					case '%': {
+						if (modifier !== null) {
+							retval += bad_format();
 							break;
-						}
+						};
+						retval += add(chr);
+						break;
+					}
 
-						case 'a': { // Short Weekday
-							if (modifier !== null) {
-								retval += bad_format();
-								break;
-							};
-							if (change_case) {
-								to_uppcase = true;
-								to_lowcase = false;
-							};
-							retval += cpy(current.abday[(utc ? obj.getUTCDay() : obj.getDay())]);
-
+					case 'a': { // Short Weekday
+						if (modifier !== null) {
+							retval += bad_format();
 							break;
-						}
+						};
+						if (change_case) {
+							to_uppcase = true;
+							to_lowcase = false;
+						};
+						retval += cpy(current.abday[(utc ? obj.getUTCDay() : obj.getDay())]);
 
-						case 'A': { // Full Weekday
-							if (modifier !== null) {
-								retval += bad_format();
-								break;
-							};
-							if (change_case) {
-								to_uppcase = true;
-								to_lowcase = false;
-							};
-							retval += cpy(current.day[(utc ? obj.getUTCDay() : obj.getDay())]);
+						break;
+					}
+
+					case 'A': { // Full Weekday
+						if (modifier !== null) {
+							retval += bad_format();
 							break;
-						}
+						};
+						if (change_case) {
+							to_uppcase = true;
+							to_lowcase = false;
+						};
+						retval += cpy(current.day[(utc ? obj.getUTCDay() : obj.getDay())]);
+						break;
+					}
 
-						case 'b': // Short Month
-						case 'h': {
-							if (change_case) {
-								to_uppcase = true;
-								to_lowcase = false;
-							}
-							if (modifier !== null) {
-								retval += bad_format();
-								break;
-							};
-							retval += cpy(current.abmon[(utc ? obj.getUTCMonth() : obj.getMonth())]);
+					case 'b': // Short Month
+					case 'h': {
+						if (change_case) {
+							to_uppcase = true;
+							to_lowcase = false;
+						}
+						if (modifier !== null) {
+							retval += bad_format();
 							break;
-						}
+						};
+						retval += cpy(current.abmon[(utc ? obj.getUTCMonth() : obj.getMonth())]);
+						break;
+					}
 
-						case 'B': { // Full Month
-							if (modifier !== null) {
-								retval += bad_format();
-								break;
-							};
-							if (change_case) {
-								to_uppcase = true;
-								to_lowcase = false;
-							}
-							retval += cpy(current.mon[(utc ? obj.getUTCMonth() : obj.getMonth())]);
+					case 'B': { // Full Month
+						if (modifier !== null) {
+							retval += bad_format();
 							break;
+						};
+						if (change_case) {
+							to_uppcase = true;
+							to_lowcase = false;
 						}
+						retval += cpy(current.mon[(utc ? obj.getUTCMonth() : obj.getMonth())]);
+						break;
+					}
 
-						case 'c': {
-							if (modifier === 'O') {
-								retval += bad_format();
-								break;
-							};
-							if (!((modifier === 'E') && (subfmt = current.era_d_t_fmt))) {
-								subfmt = current.d_t_fmt;
-							};
-
-							retval += subformat(subfmt);
+					case 'c': {
+						if (modifier === 'O') {
+							retval += bad_format();
 							break;
-						}
+						};
+						if (!((modifier === 'E') && (subfmt = current.era_d_t_fmt))) {
+							subfmt = current.d_t_fmt;
+						};
 
-						case 'C': {	// Century
-							if (modifier === 'E') {
-								retval += bad_format();
-								break;
-	/*
+						retval += subformat(subfmt);
+						break;
+					}
+
+					case 'C': {	// Century
+						if (modifier === 'E') {
+							retval += bad_format();
+							break;
+							/*
 								struct era_entry *era = _nl_get_era_entry (obj HELPER_LOCALE_ARG);
 								if (era) {
 									retval += cpy (era->era_name);
 									break;
 								};
 	*/
-							};
+						};
 
-							const year = (utc ? obj.getUTCFullYear() : obj.getFullYear());
-							retval += DO_NUMBER(1, tools.floor(year / 100) - (year % 100 < 0));
+						const year = (utc ? obj.getUTCFullYear() : obj.getFullYear());
+						retval += DO_NUMBER(1, tools.floor(year / 100) - (year % 100 < 0));
+						break;
+					}
+					case 'x': {
+						if (modifier === 'O') {
+							retval += bad_format();
 							break;
-						}
-						case 'x': {
-							if (modifier === 'O') {
-								retval += bad_format();
-								break;
-							};
-							if (!((modifier === 'E') && (subfmt = current.era_d_fmt))) {
-								subfmt = current.d_fmt;
-							};
+						};
+						if (!((modifier === 'E') && (subfmt = current.era_d_fmt))) {
+							subfmt = current.d_fmt;
+						};
 
-							retval += subformat(subfmt);
+						retval += subformat(subfmt);
+						break;
+					}
+
+					case 'D': {
+						if (modifier !== null) {
+							retval += bad_format();
 							break;
-						}
+						};
+						subfmt = "%m/%d/%y";
+						retval += subformat(subfmt);
+						break;
+					}
 
-						case 'D': {
-							if (modifier !== null) {
-								retval += bad_format();
-								break;
-							};
-							subfmt = "%m/%d/%y";
-							retval += subformat(subfmt);
+					case 'd': { // Day of month
+						if (modifier === 'E') {
+							retval += bad_format();
 							break;
-						}
+						};
 
-						case 'd': { // Day of month
-							if (modifier === 'E') {
-								retval += bad_format();
-								break;
-							};
+						retval += DO_NUMBER(2, (utc ? obj.getUTCDate() : obj.getDate()));
+						break;
+					}
 
-							retval += DO_NUMBER(2, (utc ? obj.getUTCDate() : obj.getDate()));
+					case 'e': { // Day of month (padding)
+						if (modifier === 'E') {
+							retval += bad_format();
 							break;
-						}
+						};
 
-						case 'e': { // Day of month (padding)
-							if (modifier === 'E') {
-								retval += bad_format();
-								break;
-							};
+						retval += DO_NUMBER_SPACEPAD(2, (utc ? obj.getUTCDate() : obj.getDate()));
+						break;
+					}
 
-							retval += DO_NUMBER_SPACEPAD(2, (utc ? obj.getUTCDate() : obj.getDate()));
+					case 'F': {
+						if (modifier !== null) {
+							retval += bad_format();
 							break;
-						}
+						};
+						subfmt = "%Y-%m-%d";
+						retval += subformat(subfmt);
+						break;
+					}
 
-						case 'F': {
-							if (modifier !== null) {
-								retval += bad_format();
-								break;
-							};
-							subfmt = "%Y-%m-%d";
-							retval += subformat(subfmt);
+					case 'H': { // Hours 24
+						if (modifier === 'E') {
+							retval += bad_format();
 							break;
-						}
+						};
 
-						case 'H': { // Hours 24
-							if (modifier === 'E') {
-								retval += bad_format();
-								break;
-							};
+						retval += DO_NUMBER(2, (utc ? obj.getUTCHours() : obj.getHours()));
+						break;
+					}
 
-							retval += DO_NUMBER(2, (utc ? obj.getUTCHours() : obj.getHours()));
+					case 'I': { // Hours 12
+						if (modifier === 'E') {
+							retval += bad_format();
 							break;
-						}
+						};
 
-						case 'I': { // Hours 12
-							if (modifier === 'E') {
-								retval += bad_format();
-								break;
-							};
+						retval += DO_NUMBER(2, hour12);
+						break;
+					}
 
-							retval += DO_NUMBER(2, hour12);
+					case 'k': { // Hour 24 (padding)		/* GNU extension.  */
+						if (modifier === 'E') {
+							retval += bad_format();
 							break;
-						}
+						};
 
-						case 'k': { // Hour 24 (padding)		/* GNU extension.  */
-							if (modifier === 'E') {
-								retval += bad_format();
-								break;
-							};
+						retval += DO_NUMBER_SPACEPAD(2, (utc ? obj.getUTCHours() : obj.getHours()));
+						break;
+					}
 
-							retval += DO_NUMBER_SPACEPAD(2, (utc ? obj.getUTCHours() : obj.getHours()));
+					case 'l': { // Hour 12 (padding)		/* GNU extension.  */
+						if (modifier === 'E') {
+							retval += bad_format();
 							break;
-						}
+						};
 
-						case 'l': { // Hour 12 (padding)		/* GNU extension.  */
-							if (modifier === 'E') {
-								retval += bad_format();
-								break;
-							};
+						retval += DO_NUMBER_SPACEPAD(2, hour12);
+						break;
+					}
 
-							retval += DO_NUMBER_SPACEPAD(2, hour12);
+					case 'j': { // Day of year
+						if (modifier === 'E') {
+							retval += bad_format();
 							break;
-						}
+						};
 
-						case 'j': { // Day of year
-							if (modifier === 'E') {
-								retval += bad_format();
-								break;
-							};
+						retval += DO_NUMBER(3, 1 + dates.getDayOfYear(obj, utc));
+						break;
+					}
 
-							retval += DO_NUMBER(3, 1 + dates.getDayOfYear(obj, utc));
+					case 'M': { // Minutes
+						if (modifier === 'E') {
+							retval += bad_format();
 							break;
-						}
+						};
 
-						case 'M': { // Minutes
-							if (modifier === 'E') {
-								retval += bad_format();
-								break;
-							};
+						retval += DO_NUMBER(2, (utc ? obj.getUTCMinutes() : obj.getMinutes()));
+						break;
+					}
 
-							retval += DO_NUMBER(2, (utc ? obj.getUTCMinutes() : obj.getMinutes()));
+					case 'm': { // Month
+						if (modifier === 'E') {
+							retval += bad_format();
 							break;
-						}
+						};
 
-						case 'm': { // Month
-							if (modifier === 'E') {
-								retval += bad_format();
-								break;
-							};
+						retval += DO_NUMBER(2, (utc ? obj.getUTCMonth() : obj.getMonth()) + 1);
+						break;
+					}
 
-							retval += DO_NUMBER(2, (utc ? obj.getUTCMonth() : obj.getMonth()) + 1);
-							break;
-						}
+					case 'n': { // New line
+						retval += add('\n');
+						break;
+					}
 
-						case 'n': { // New line
-							retval += add('\n');
-							break;
-						}
+					case 'P': { // am/pm
+						to_uppcase = false;
+						to_lowcase = true;
+						retval += cpy(current.am_pm[(utc ? obj.getUTCHours() : obj.getHours()) > 11 ? 1 : 0]);
+						break;
+					}
 
-						case 'P': { // am/pm
+					case 'p': { // AM/PM
+						if (change_case) {
 							to_uppcase = false;
 							to_lowcase = true;
-							retval += cpy(current.am_pm[(utc ? obj.getUTCHours() : obj.getHours()) > 11 ? 1 : 0]);
+						};
+						retval += cpy(current.am_pm[(utc ? obj.getUTCHours() : obj.getHours()) > 11 ? 1 : 0]);
+						break;
+					}
+
+					case 'R': {
+						subfmt = "%H:%M";
+						retval += subformat(subfmt);
+						break;
+					}
+
+					case 'r': {
+						if (!(subfmt = current.t_fmt_ampm)) {
+							subfmt = "%I:%M:%S %p";
+						};
+						retval += subformat(subfmt);
+						break;
+					}
+
+					case 'S': { // Seconds
+						if (modifier === 'E') {
+							retval += bad_format();
 							break;
-						}
+						};
 
-						case 'p': { // AM/PM
-							if (change_case) {
-								to_uppcase = false;
-								to_lowcase = true;
-							};
-							retval += cpy(current.am_pm[(utc ? obj.getUTCHours() : obj.getHours()) > 11 ? 1 : 0]);
-							break;
-						}
+						retval += DO_NUMBER(2, (utc ? obj.getUTCSeconds() : obj.getSeconds()));
+						break;
+					}
 
-						case 'R': {
-							subfmt = "%H:%M";
-							retval += subformat(subfmt);
-							break;
-						}
-
-						case 'r': {
-							if (!(subfmt = current.t_fmt_ampm)) {
-								subfmt = "%I:%M:%S %p";
-							};
-							retval += subformat(subfmt);
-							break;
-						}
-
-						case 'S': { // Seconds
-							if (modifier === 'E') {
-								retval += bad_format();
-								break;
-							};
-
-							retval += DO_NUMBER(2, (utc ? obj.getUTCSeconds() : obj.getSeconds()));
-							break;
-						}
-
-	/*
+					/*
 						case 's': {		/ * GNU extension.  * /
 							struct tm ltm;
 							time_t t;
@@ -670,110 +670,110 @@ exports.add = function add(modules) {
 						}
 	*/
 
-						case 'X': {
-							if (modifier === 'O') {
-								retval += bad_format();
-								break;
+					case 'X': {
+						if (modifier === 'O') {
+							retval += bad_format();
+							break;
+						};
+						if (!((modifier === 'E') && (subfmt = current.era_t_fmt))) {
+							subfmt = current.t_fmt;
+						};
+						retval += subformat(subfmt);
+						break;
+					}
+
+					case 'T': {
+						subfmt = "%H:%M:%S";
+						retval += subformat(subfmt);
+						break;
+					}
+
+					case 't': { // Tab
+						retval += add('\t');
+						break;
+					}
+
+					case 'u': { // Day of week
+						retval += DO_NUMBER(1, ((utc ? obj.getUTCDay() : obj.getDay()) - 1 + 7) % 7 + 1);
+						break;
+					}
+
+					case 'U': {
+						if (modifier === 'E') {
+							retval += bad_format();
+							break;
+						};
+
+						retval += DO_NUMBER(2, tools.floor((dates.getDayOfYear(obj, utc) - (utc ? obj.getUTCDay() : obj.getDay()) + 7) / 7));
+						break;
+					}
+
+					case 'V':
+					case 'g':
+					case 'G': {
+						if (modifier === 'E') {
+							retval += bad_format();
+							break;
+						};
+						let year = (utc ? obj.getUTCFullYear() : obj.getFullYear()),
+							days = dates.isoWeekDays(dates.getDayOfYear(obj, utc), (utc ? obj.getUTCDay() : obj.getDay()));
+
+						if (days < 0) {
+							/* This ISO week belongs to the previous year.  */
+							year--;
+							days = dates.isoWeekDays(dates.getDayOfYear(obj, utc) + (365 + dates.isLeapYear(year)), (utc ? obj.getUTCDay() : obj.getDay()));
+						} else {
+							const d = dates.isoWeekDays(dates.getDayOfYear(obj, utc) - (365 + dates.isLeapYear(year)), (utc ? obj.getUTCDay() : obj.getDay()));
+							if (d >= 0) {
+								/* This ISO week belongs to the next year.  */
+								year++;
+								days = d;
 							};
-							if (!((modifier === 'E') && (subfmt = current.era_t_fmt))) {
-								subfmt = current.t_fmt;
-							};
-							retval += subformat(subfmt);
+						};
+
+						switch (chr) {
+						case 'g': {
+							retval += DO_NUMBER(2, (year % 100 + 100) % 100);
 							break;
 						}
 
-						case 'T': {
-							subfmt = "%H:%M:%S";
-							retval += subformat(subfmt);
-							break;
-						}
-
-						case 't': { // Tab
-							retval += add('\t');
-							break;
-						}
-
-						case 'u': { // Day of week
-							retval += DO_NUMBER(1, ((utc ? obj.getUTCDay() : obj.getDay()) - 1 + 7) % 7 + 1);
-							break;
-						}
-
-						case 'U': {
-							if (modifier === 'E') {
-								retval += bad_format();
-								break;
-							};
-
-							retval += DO_NUMBER(2, tools.floor((dates.getDayOfYear(obj, utc) - (utc ? obj.getUTCDay() : obj.getDay()) + 7) / 7));
-							break;
-						}
-
-						case 'V':
-						case 'g':
 						case 'G': {
-							if (modifier === 'E') {
-								retval += bad_format();
-								break;
-							};
-							let year = (utc ? obj.getUTCFullYear() : obj.getFullYear()),
-								days = dates.isoWeekDays(dates.getDayOfYear(obj, utc), (utc ? obj.getUTCDay() : obj.getDay()));
-
-							if (days < 0) {
-								/* This ISO week belongs to the previous year.  */
-								year--;
-								days = dates.isoWeekDays(dates.getDayOfYear(obj, utc) + (365 + dates.isLeapYear(year)), (utc ? obj.getUTCDay() : obj.getDay()));
-							} else {
-								const d = dates.isoWeekDays(dates.getDayOfYear(obj, utc) - (365 + dates.isLeapYear(year)), (utc ? obj.getUTCDay() : obj.getDay()));
-								if (d >= 0) {
-									/* This ISO week belongs to the next year.  */
-									year++;
-									days = d;
-								};
-							};
-
-							switch (chr) {
-								case 'g': {
-									retval += DO_NUMBER(2, (year % 100 + 100) % 100);
-									break;
-								}
-
-								case 'G': {
-									retval += DO_NUMBER(1, year);
-									break;
-								}
-
-								default: {
-									retval += DO_NUMBER(2, tools.floor(days / 7) + 1);
-									break;
-								}
-							};
+							retval += DO_NUMBER(1, year);
 							break;
 						}
 
-						case 'W': { // Week of year
-							if (modifier === 'E') {
-								retval += bad_format();
-								break;
-							};
-
-							retval += DO_NUMBER(2, tools.floor(((dates.getDayOfYear(obj, utc) - ((utc ? obj.getUTCDay() : obj.getDay()) - 1 + 7) % 7 + 7) / 7) + 0.5));
+						default: {
+							retval += DO_NUMBER(2, tools.floor(days / 7) + 1);
 							break;
 						}
+						};
+						break;
+					}
 
-						case 'w': { // Week day number
-							if (modifier === 'E') {
-								retval += bad_format();
-								break;
-							};
-
-							retval += DO_NUMBER(1, (utc ? obj.getUTCDay() : obj.getDay()));
+					case 'W': { // Week of year
+						if (modifier === 'E') {
+							retval += bad_format();
 							break;
-						}
+						};
 
-						case 'Y': {
-							if (modifier === 'E') {
-								retval += bad_format();
-	/*
+						retval += DO_NUMBER(2, tools.floor(((dates.getDayOfYear(obj, utc) - ((utc ? obj.getUTCDay() : obj.getDay()) - 1 + 7) % 7 + 7) / 7) + 0.5));
+						break;
+					}
+
+					case 'w': { // Week day number
+						if (modifier === 'E') {
+							retval += bad_format();
+							break;
+						};
+
+						retval += DO_NUMBER(1, (utc ? obj.getUTCDay() : obj.getDay()));
+						break;
+					}
+
+					case 'Y': {
+						if (modifier === 'E') {
+							retval += bad_format();
+							/*
 								struct era_entry *era = _nl_get_era_entry (obj HELPER_LOCALE_ARG);
 								if (era) {
 									subfmt = era->era_format;
@@ -781,19 +781,19 @@ exports.add = function add(modules) {
 									break;
 								}
 	*/
-							} else if (modifier === 'O') {
-								retval += bad_format();
-							} else {
-								retval += DO_NUMBER(1, (utc ? obj.getUTCFullYear() : obj.getFullYear()));
-							};
-							break;
-						}
+						} else if (modifier === 'O') {
+							retval += bad_format();
+						} else {
+							retval += DO_NUMBER(1, (utc ? obj.getUTCFullYear() : obj.getFullYear()));
+						};
+						break;
+					}
 
-						case 'y': {
-							if (modifier === 'E') {
-								retval += bad_format();
-								break;
-	/*
+					case 'y': {
+						if (modifier === 'E') {
+							retval += bad_format();
+							break;
+							/*
 								struct era_entry *era = _nl_get_era_entry (obj HELPER_LOCALE_ARG);
 								if (era)
 								{
@@ -802,61 +802,61 @@ exports.add = function add(modules) {
 									break;
 								};
 	*/
-							};
+						};
 
-							retval += DO_NUMBER(2, ((utc ? obj.getUTCFullYear() : obj.getFullYear()) % 100 + 100) % 100);
-							break;
-						}
+						retval += DO_NUMBER(2, ((utc ? obj.getUTCFullYear() : obj.getFullYear()) % 100 + 100) % 100);
+						break;
+					}
 
-						case 'Z': { // Timezone name
-							if (change_case) {
-								to_uppcase = false;
-								to_lowcase = true;
-							};
+					case 'Z': { // Timezone name
+						if (change_case) {
+							to_uppcase = false;
+							to_lowcase = true;
+						};
 
-							if (!zone) {
-								zone = "";
-							};
+						if (!zone) {
+							zone = "";
+						};
 
-							retval += cpy(zone);
-							break;
-						}
+						retval += cpy(zone);
+						break;
+					}
 
-						case 'z': { // Timezone offset
-			/*
+					case 'z': { // Timezone offset
+						/*
 							if (obj->tm_isdst < 0) {
 								break;
 							};
 			*/
 
-							// NOTE: The offset sign is inverted
-							let diff = (utc ? 0 : -obj.getTimezoneOffset());
+						// NOTE: The offset sign is inverted
+						let diff = (utc ? 0 : -obj.getTimezoneOffset());
 
-							if (diff < 0) {
-								retval += add('-');
-								diff = -diff;
-							} else {
-								retval += add('+');
-							};
+						if (diff < 0) {
+							retval += add('-');
+							diff = -diff;
+						} else {
+							retval += add('+');
+						};
 
-							//diff /= 60;
-							retval += DO_NUMBER(4, tools.floor(diff / 60 * 100) + (diff % 60));
-							break;
-						}
+						//diff /= 60;
+						retval += DO_NUMBER(4, tools.floor(diff / 60 * 100) + (diff % 60));
+						break;
+					}
 
-	/*
+					/*
 						case '\0':		/ * GNU extension: % at end of format.  * /
 							p--;
 							retval += bad_format();
 							break;
 	*/
 
-						default: {
+					default: {
 						/* Unknown format; output the format, including the '%',
 							since this is most likely the right thing to do if a
 							multibyte string has been misparsed.  */
-							retval += bad_format();
-						}
+						retval += bad_format();
+					}
 					};
 
 					p++;

@@ -26,26 +26,26 @@
 
 
 //! IF_SET('mjs')
-	// TODO: Make "moment-timezone" optional. For now, we can't !
+// TODO: Make "moment-timezone" optional. For now, we can't !
 
-	//!	INJECT("import {default as nodeMoment} from 'moment-timezone';")
+//!	INJECT("import {default as nodeMoment} from 'moment-timezone';")
 //! ELSE()
-	"use strict";
+"use strict";
 
-	let nodeMoment = null;
+let nodeMoment = null;
+try {
+	/* eslint global-require: "off", import/no-dynamic-require: "off" */
+	const pkg = 'moment-timezone'; // Prevent browserify
+	nodeMoment = require(pkg);
+} catch(ex) {
 	try {
 		/* eslint global-require: "off", import/no-dynamic-require: "off" */
-		const pkg = 'moment-timezone'; // Prevent browserify
+		const pkg = 'moment'; // Prevent browserify
 		nodeMoment = require(pkg);
 	} catch(ex) {
-		try {
-			/* eslint global-require: "off", import/no-dynamic-require: "off" */
-			const pkg = 'moment'; // Prevent browserify
-			nodeMoment = require(pkg);
-		} catch(ex) {
-			// Do nothing
-		};
+		// Do nothing
 	};
+};
 //! END_IF()
 
 
