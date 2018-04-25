@@ -73,7 +73,7 @@ exports.add = function add(modules) {
 					oldLocaleFn: nodeMoment.locale,
 					oldPrototypeLocaleFn: nodeMoment.prototype.locale,
 					loaded: tools.nullObject(),
-					hasTz: false, 
+					hasTz: false,
 					oldTzLoad: null,
 				};
 
@@ -95,9 +95,9 @@ exports.add = function add(modules) {
 					__options__ = types.freezeObject(newOptions);
 					return __options__;
 				});
-	
+
 				tools.setOptions(_options);
-	
+
 				__Internal__.loadLocale = function loadLocale(name, /*optional*/globally) {
 					// tools.Locale.load('fr').then(l=>tools.Dates.Moment.create().locale(l.NAME).format('LLLL')).then(console.log);
 

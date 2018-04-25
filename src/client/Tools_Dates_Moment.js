@@ -53,7 +53,7 @@ exports.add = function add(modules) {
 				const __Internal__ = {
 					oldLocaleFn: global.moment.locale,
 					oldPrototypeLocaleFn: global.moment.prototype.locale,
-					hasTz: false, 
+					hasTz: false,
 					oldTzLoad: null,
 					tz: null,
 					loaded: tools.nullObject(),
@@ -77,9 +77,9 @@ exports.add = function add(modules) {
 					__options__ = types.freezeObject(newOptions);
 					return __options__;
 				});
-	
+
 				tools.setOptions(_options);
-	
+
 
 				__Internal__.loadLocale = function loadLocale(name, /*optional*/globally) {
 					// DD_ROOT.Doodad.Tools.Locale.load('fr').then(l=>DD_ROOT.Doodad.Tools.Dates.Moment.create().locale(l.NAME).format('LLLL')).then(console.log);
@@ -167,7 +167,7 @@ exports.add = function add(modules) {
 
 						moment.ADD('tz', moment.tz);
 						__Internal__.oldTzLoad = moment.tz.load;
-		
+
 						moment.tz.load = function(/*optional*/pathOrData) {
 							return Promise.try(function tryLoad() {
 								if (types.isNothing(pathOrData)) {

@@ -58,16 +58,16 @@ exports.add = function add(modules) {
 
 				const hours = tools.floor(seconds / __Internal__.HOUR_SECONDS);
 				seconds -= hours * __Internal__.HOUR_SECONDS;
-					
+
 				const minutes = tools.floor(seconds / __Internal__.MINUTE_SECONDS);
 				seconds -= minutes * __Internal__.MINUTE_SECONDS;
-					
+
 				seconds = tools.round(seconds, 3);
 
 				return {
-					days: days, 
-					hours: hours, 
-					minutes: minutes, 
+					days: days,
+					hours: hours,
+					minutes: minutes,
 					seconds: seconds,
 				};
 			});
@@ -92,7 +92,7 @@ exports.add = function add(modules) {
 				};
 				return dayOfYear;
 			});
-				
+
 			/****************************************************************************************************/
 
 			//! REPLACE_BY("\n// Copyright (C) 2002-2015 Free Software Foundation, Inc.\n")
@@ -115,20 +115,20 @@ exports.add = function add(modules) {
 			//! END_REPLACE()
 
 			//let tzset_called = false;
-				
-				
+
+
 			__Internal__.ISO_WEEK_START_WDAY = 1;
 			__Internal__.ISO_WEEK1_WDAY = 4; /* Thursday */
 			__Internal__.YDAY_MINIMUM = -366;
 			__Internal__.big_enough_multiple_of_7 = (tools.floor(-__Internal__.YDAY_MINIMUM / 7) + 2) * 7;
-					
+
 			dates.ADD('isoWeekDays', function isoWeekDays(yday, wday) {
 				/* Add enough to the first operand of % to make it nonnegative.  */
 				return (yday
 				- (yday - wday + __Internal__.ISO_WEEK1_WDAY + __Internal__.big_enough_multiple_of_7) % 7
 				+ __Internal__.ISO_WEEK1_WDAY - __Internal__.ISO_WEEK_START_WDAY);
 			});
-				
+
 			dates.ADD('strftime', function strftime(format, obj, /*optional*/loc, /*optional*/utc) {
 				let current;
 				if (loc) {
@@ -136,9 +136,9 @@ exports.add = function add(modules) {
 				} else {
 					current = locale.getCurrent().LC_TIME;
 				};
-					
+
 				let negative_number = false;
-					
+
 				/* The POSIX test suite assumes that setting
 					the environment variable TZ to a new value before calling strftime()
 					will influence the result (the %Z format) even if the information in
@@ -164,7 +164,7 @@ exports.add = function add(modules) {
 				} else if (hour12 === 0) {
 					hour12 = 12;
 				};
-					
+
 				let pad,		/* Padding for number ('-', '_', or null).  */
 					modifier,		/* Field modifier ('E', 'O', or null).  */
 					subfmt,
@@ -196,10 +196,10 @@ exports.add = function add(modules) {
 					if (negative_number) {
 						str = '-' + str;
 					};
-						
+
 					return str;
 				};
-					
+
 				function add(s) {
 					const _delta = width - s.length;
 					if (_delta > 0) {
@@ -221,10 +221,10 @@ exports.add = function add(modules) {
 					};
 					return s;
 				};
-					
+
 				function DO_NUMBER(digits, number_value) {
 					digits = digits > width ? digits : width;
-						
+
 					/* Format the number according to the MODIFIER flag.  */
 
 					if ((modifier === 'O') && (number_value >= 0)) {
@@ -236,16 +236,16 @@ exports.add = function add(modules) {
 							return cpy(cp);
 						};
 					};
-						
+
 					negative_number = number_value < 0;
 
 					if (negative_number) {
 						number_value = -number_value;
 					};
-					
+
 					return do_number_sign_and_padding(types.toString(number_value), digits);
 				};
-					
+
 				function DO_NUMBER_SPACEPAD(digits, number_value) {
 					/* Force `_' flag unless overwritten by `0' or '-' flag.  */
 					if ((pad !== '0') && (pad !== '-')) {
@@ -254,18 +254,18 @@ exports.add = function add(modules) {
 
 					return DO_NUMBER(digits, number_value);
 				};
-					
+
 				function ISDIGIT(chr) {
 					return ((chr >= '0') && (chr <= '9'));
 				};
-					
+
 				function subformat(subfmt) {
 					let retval = add(strftime(subfmt, obj, loc));
 
 					if (to_uppcase) {
 						retval = retval.toUpperCase();
 					};
-						
+
 					return retval;
 				};
 
@@ -278,11 +278,11 @@ exports.add = function add(modules) {
 					p += retval.length;
 					return cpy(retval);
 				};
-					
+
 				let retval = '';
-				
+
 				const formatLen = format.length;
-					
+
 				while (p < formatLen) {
 					pad = null;		/* Padding for number ('-', '_', or null).  */
 					modifier = null;		/* Field modifier ('E', 'O', or null).  */
@@ -304,7 +304,7 @@ exports.add = function add(modules) {
 						p++;
 						continue;
 					};
-						
+
 					/* Check for flags that can modify a format.  */
 					while (p < formatLen) {
 						chr = format[++p];
@@ -389,7 +389,7 @@ exports.add = function add(modules) {
 								to_lowcase = false;
 							};
 							retval += cpy(current.abday[(utc ? obj.getUTCDay() : obj.getDay())]);
-								
+
 							break;
 						}
 
@@ -475,7 +475,7 @@ exports.add = function add(modules) {
 							retval += subformat(subfmt);
 							break;
 						}
-								
+
 						case 'D': {
 							if (modifier !== null) {
 								retval += bad_format();
@@ -501,7 +501,7 @@ exports.add = function add(modules) {
 								retval += bad_format();
 								break;
 							};
-								
+
 							retval += DO_NUMBER_SPACEPAD(2, (utc ? obj.getUTCDate() : obj.getDate()));
 							break;
 						}
@@ -521,7 +521,7 @@ exports.add = function add(modules) {
 								retval += bad_format();
 								break;
 							};
-								
+
 							retval += DO_NUMBER(2, (utc ? obj.getUTCHours() : obj.getHours()));
 							break;
 						}
@@ -759,7 +759,7 @@ exports.add = function add(modules) {
 							retval += DO_NUMBER(2, tools.floor(((dates.getDayOfYear(obj, utc) - ((utc ? obj.getUTCDay() : obj.getDay()) - 1 + 7) % 7 + 7) / 7) + 0.5));
 							break;
 						}
-				
+
 						case 'w': { // Week day number
 							if (modifier === 'E') {
 								retval += bad_format();
@@ -803,7 +803,7 @@ exports.add = function add(modules) {
 								};
 	*/
 							};
-								
+
 							retval += DO_NUMBER(2, ((utc ? obj.getUTCFullYear() : obj.getFullYear()) % 100 + 100) % 100);
 							break;
 						}
@@ -858,16 +858,16 @@ exports.add = function add(modules) {
 							retval += bad_format();
 						}
 					};
-						
+
 					p++;
 				};
 
 				return retval;
-			});	
-				
+			});
+
 			/****************************************************************************************************/
-				
-				
+
+
 			//return function init(/*optional*/options) {
 			//
 			//};
