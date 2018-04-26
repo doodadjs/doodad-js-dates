@@ -122,7 +122,7 @@ exports.add = function add(modules) {
 					return name;
 				};
 
-				global.moment.lang = global.moment.locale = moment.ADD('lang', moment.ADD('locale', function locale(name) {
+				global.moment.lang = moment.ADD('lang', moment.ADD('locale', function locale(name) {
 					if (name) {
 						name = __Internal__.loadLocale(name, true);
 						return __Internal__.oldLocaleFn.call(this, name);
@@ -131,7 +131,9 @@ exports.add = function add(modules) {
 					};
 				}));
 
-				global.moment.prototype.lang = global.moment.prototype.locale = function locale(name) {
+				global.moment.locale = global.moment.lang;
+
+				global.moment.prototype.lang = function locale(name) {
 					if (name) {
 						name = __Internal__.loadLocale(name, false);
 						return __Internal__.oldPrototypeLocaleFn.call(this, name);
@@ -139,6 +141,8 @@ exports.add = function add(modules) {
 						return __Internal__.oldPrototypeLocaleFn.call(this);
 					};
 				};
+
+				global.moment.prototype.locale = global.moment.prototype.lang;
 
 				moment.ADD('create', function create(/*paramarray*/...args) {
 					const moment = global.moment(...args);
