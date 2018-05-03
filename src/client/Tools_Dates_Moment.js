@@ -71,14 +71,30 @@ exports.add = function add(modules) {
 					return __options__;
 				});
 
-				moment.ADD('setOptions', function setOptions(options) {
-					const newOptions = tools.nullObject(__options__, options);
-					newOptions.dataUri = files.parseUrl(newOptions.dataUri);
+				moment.ADD('setOptions', function setOptions(...args) {
+					const newOptions = tools.nullObject(__options__, ...args);
+
+					if (newOptions.secret !== _shared.SECRET) {
+						throw new types.Error("Invalid secret.");
+					};
+
+					delete newOptions.secret;
+
+					if (newOptions.dataUri) {
+						newOptions.dataUri = files.parseUrl(newOptions.dataUri);
+					};
+
 					__options__ = types.freezeObject(newOptions);
+
 					return __options__;
 				});
 
-				tools.setOptions(_options);
+				moment.setOptions(
+					{
+						secret: _shared.SECRET,
+					},
+					_options
+				);
 
 
 				__Internal__.loadLocale = function loadLocale(name, /*optional*/globally) {
