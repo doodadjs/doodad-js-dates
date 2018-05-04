@@ -50,6 +50,10 @@ exports.add = function add(modules) {
 					config = tools.Config;
 
 
+				//===================================
+				// Internal
+				//===================================
+
 				const __Internal__ = {
 					oldLocaleFn: global.moment.locale,
 					oldPrototypeLocaleFn: global.moment.prototype.locale,
@@ -59,20 +63,30 @@ exports.add = function add(modules) {
 					loaded: tools.nullObject(),
 				};
 
+				//===================================
+				// Options
+				//===================================
+
 				let __options__ = tools.nullObject({
 					dataUri: null,
 				}, _options);
 
-				__options__.dataUri = __options__.dataUri && files.Url.parse(__options__.dataUri);
+				__Internal__._setOptions = function setOptions(...args) {
+					const newOptions = tools.nullObject(__options__, ...args);
 
-				types.freezeObject(__options__);
+					if (newOptions.dataUri) {
+						newOptions.dataUri = files.parseUrl(newOptions.dataUri);
+					};
+
+					return newOptions;
+				};
 
 				moment.ADD('getOptions', function() {
 					return __options__;
 				});
 
 				moment.ADD('setOptions', function setOptions(...args) {
-					const newOptions = tools.nullObject(__options__, ...args);
+					const newOptions = __Internal__._setOptions(...args);
 
 					if (newOptions.secret !== _shared.SECRET) {
 						throw new types.Error("Invalid secret.");
@@ -80,22 +94,16 @@ exports.add = function add(modules) {
 
 					delete newOptions.secret;
 
-					if (newOptions.dataUri) {
-						newOptions.dataUri = files.parseUrl(newOptions.dataUri);
-					};
-
 					__options__ = types.freezeObject(newOptions);
 
 					return __options__;
 				});
 
-				moment.setOptions(
-					{
-						secret: _shared.SECRET,
-					},
-					_options
-				);
+				__options__ = types.freezeObject(__Internal__._setOptions(_options));
 
+				//===================================
+				// Moment
+				//===================================
 
 				__Internal__.loadLocale = function loadLocale(name, /*optional*/globally) {
 					// DD_ROOT.Doodad.Tools.Locale.load('fr').then(l=>DD_ROOT.Doodad.Tools.Dates.Moment.create().locale(l.NAME).format('LLLL')).then(console.log);
