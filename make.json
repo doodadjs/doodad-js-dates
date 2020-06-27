@@ -48,6 +48,13 @@
 			browserify: true
 		},
 		{
+			src: "common/Templates_Html.js",
+			client: true,
+			server: true,
+			browserify: true,
+			exclude: true
+		},
+		{
 			src: "client/Tools_Dates_Moment.js",
 			client: true,
 			server: false,
@@ -84,6 +91,63 @@
 			operations: [
 				{
 					class: "Make.Generate.Package"
+				},
+
+				{
+					class: "Make.Folder.Create",
+					destination: "%INSTALLDIR%/%PACKAGENAME%/lib"
+				},
+
+				{
+					class: "Make.Folder.Create",
+					destination: "%INSTALLDIR%/%PACKAGENAME%/lib/moment"
+				},
+				{
+					class: "Make.File.Copy",
+					source: "~moment/min/moment.min.js",
+					destination: "%INSTALLDIR%/%PACKAGENAME%/lib/moment/moment.min.js",
+					fromOutside: true,
+					minify: true
+				},
+				{
+					class: "Make.File.Copy",
+					source: "~moment/LICENSE",
+					destination: "%INSTALLDIR%/%PACKAGENAME%/lib/moment/LICENSE"
+				},
+				{
+					class: "Make.File.Copy",
+					source: "~moment/README.md",
+					destination: "%INSTALLDIR%/%PACKAGENAME%/lib/moment/README.md"
+				},
+				//{
+				//	class: "Make.Folder.Copy",
+				//	source: "~moment/dist/locale",
+				//	destination: "%INSTALLDIR%/%PACKAGENAME%/lib/moment/locale"
+				//},
+
+				{
+					class: "Make.Folder.Create",
+					destination: "%INSTALLDIR%/%PACKAGENAME%/lib/moment-timezone"
+				},
+				{
+					class: "Make.File.Copy",
+					source: "~moment-timezone/builds/moment-timezone.min.js",
+					destination: "%INSTALLDIR%/%PACKAGENAME%/lib/moment-timezone/moment-timezone.min.js"
+				},
+				{
+					class: "Make.File.Copy",
+					source: "~moment-timezone/LICENSE",
+					destination: "%INSTALLDIR%/%PACKAGENAME%/lib/moment-timezone/LICENSE"
+				},
+				{
+					class: "Make.File.Copy",
+					source: "~moment-timezone/README.md",
+					destination: "%INSTALLDIR%/%PACKAGENAME%/lib/moment-timezone/README.md"
+				},
+				{
+					class: "Make.Folder.Copy",
+					source: "~moment-timezone/data/packed",
+					destination: "%INSTALLDIR%/%PACKAGENAME%/lib/moment-timezone/data"
 				}
 			]
 		},

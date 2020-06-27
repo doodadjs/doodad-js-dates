@@ -18,7 +18,7 @@
     "url": "https://github.com/doodadjs/doodad-js-dates/issues",
     "email": "doodadjs@gmail.com"
   },
-  "optionalDependencies": {
+  "dependencies": {
     "moment": "^2.22.1",
     "moment-timezone": "^0.5.17"
   },

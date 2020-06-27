@@ -86,14 +86,14 @@ exports.add = function add(modules) {
 				//===================================
 
 				let __options__ = tools.nullObject({
-					dataUri: null,
+					tzDataUri: null,
 				}, _options);
 
 				__Internal__._setOptions = function setOptions(...args) {
 					const newOptions = tools.nullObject(__options__, ...args);
 
-					if (newOptions.dataUri) {
-						newOptions.dataUri = files.parsePath(newOptions.dataUri);
+					if (newOptions.tzDataUri) {
+						newOptions.tzDataUri = files.parsePath(newOptions.tzDataUri);
 					};
 
 					return newOptions;
@@ -224,7 +224,7 @@ exports.add = function add(modules) {
 									pathOrData = files.parsePath(pathOrData);
 								};
 								if (types._instanceof(pathOrData, [files.Path, files.Url])) {
-									return config.load(__options__.dataUri.combine(pathOrData))
+									return config.load(__options__.tzDataUri.combine(pathOrData))
 										.then(function(data) {
 											return __Internal__.oldTzLoad.call(this, data);
 										}, null, this);
@@ -234,7 +234,7 @@ exports.add = function add(modules) {
 							});
 						};
 
-						if (!types.isNothing(__options__.dataUri)) {
+						if (!types.isNothing(__options__.tzDataUri)) {
 							return moment.tz.load();
 						};
 
