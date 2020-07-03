@@ -48,13 +48,6 @@
 			browserify: true
 		},
 		{
-			src: "common/Templates_Html.js",
-			client: true,
-			server: true,
-			browserify: true,
-			exclude: true
-		},
-		{
 			src: "client/Tools_Dates_Moment.js",
 			client: true,
 			server: false,
@@ -65,6 +58,13 @@
 			client: false,
 			server: true,
 			browserify: true
+		},
+		{
+			src: "common/res/Templates_Html.js",
+			client: true,
+			server: true,
+			browserify: true,
+			exclude: true
 		}
 	],
 	tasks: {
