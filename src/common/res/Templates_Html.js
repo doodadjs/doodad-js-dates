@@ -31,7 +31,7 @@
 
 exports.add = function add(modules) {
 	modules = (modules || {});
-	modules['Doodad.Tools.Dates/Doodad.Templates.Html'] = {
+	modules['Doodad.Templates.Html/Doodad.Tools.Dates'] = {
 		version: /*! REPLACE_BY(TO_SOURCE(VERSION(MANIFEST("name")))) */ null /*! END_REPLACE()*/,
 
 		dependencies: [
@@ -43,10 +43,10 @@ exports.add = function add(modules) {
 			// Get namespaces
 			//===================================
 
-			const doodad = root.Doodad,
-				//tools = doodad.Tools,
-				//types = doodad.Types,
-				templatesHtml = doodad.Templates.Html;
+			//const doodad = root.Doodad,
+			//	tools = doodad.Tools,
+			//	types = doodad.Types,
+			//	templatesHtml = doodad.Templates.Html;
 
 			//===================================
 			// Internal
@@ -62,13 +62,16 @@ exports.add = function add(modules) {
 			//tools.complete(_shared.Natives, {
 			//});
 
-
 			//===================================
 			// Init
 			//===================================
-			return function init(/*optional*/options) {
-				templatesHtml.registerClientScripts(["@doodad-js/dates/lib/moment/moment.min.js", "@doodad-js/dates/lib/moment-timezone/moment-timezone.min.js"], {async: false});
-			};
+
+			_options.buildFile.onApply.attach(null, function(ev) {
+				ev.data.scripts.register(["@doodad-js/dates/lib/moment/moment.min.js", "@doodad-js/dates/lib/moment-timezone/moment-timezone.min.js"], {async: false});
+			});
+
+			//return function init(/*optional*/options) {
+			//};
 		},
 	};
 	return modules;
