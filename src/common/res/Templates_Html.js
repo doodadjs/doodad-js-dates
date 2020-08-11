@@ -67,8 +67,7 @@ exports.add = function add(modules) {
 			// Init
 			//===================================
 			return function init(/*optional*/options) {
-				templatesHtml.registerClientScript("@doodad-js/dates/lib/moment/moment.min.js", false);
-				templatesHtml.registerClientScript("@doodad-js/dates/lib/moment-timezone/moment-timezone.min.js", false);
+				templatesHtml.registerClientScripts(["@doodad-js/dates/lib/moment/moment.min.js", "@doodad-js/dates/lib/moment-timezone/moment-timezone.min.js"], {async: false});
 			};
 		},
 	};
