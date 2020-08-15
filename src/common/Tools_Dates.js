@@ -124,9 +124,9 @@ exports.add = function add(modules) {
 
 			dates.ADD('isoWeekDays', function isoWeekDays(yday, wday) {
 				/* Add enough to the first operand of % to make it nonnegative.  */
-				return (yday
-				- (yday - wday + __Internal__.ISO_WEEK1_WDAY + __Internal__.big_enough_multiple_of_7) % 7
-				+ __Internal__.ISO_WEEK1_WDAY - __Internal__.ISO_WEEK_START_WDAY);
+				return (yday -
+					(yday - wday + __Internal__.ISO_WEEK1_WDAY + __Internal__.big_enough_multiple_of_7) % 7 +
+					__Internal__.ISO_WEEK1_WDAY - __Internal__.ISO_WEEK_START_WDAY);
 			});
 
 			dates.ADD('strftime', function strftime(format, obj, /*optional*/loc, /*optional*/utc) {
