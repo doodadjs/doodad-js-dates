@@ -19,8 +19,8 @@
     "email": "doodadjs@gmail.com"
   },
   "dependencies": {
-    "moment": "^2.22.1",
-    "moment-timezone": "^0.5.17"
+    "moment": "^2.27.0",
+    "moment-timezone": "^0.5.31"
   },
   "tonicExampleFilename": "tonic.js"
 }
